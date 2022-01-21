@@ -5,6 +5,6 @@ keycloak:
   auth-server-url: http://localhost:8180/auth
   realm: myrealm
   public-client: 'true'
-  resource: spring
+  resource: vaadin
 server:
-  port: '8080'
+  port: '8081'
