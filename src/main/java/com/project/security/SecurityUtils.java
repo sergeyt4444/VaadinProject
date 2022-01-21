@@ -33,7 +33,7 @@ public class SecurityUtils {
 
         List<String> allowedRoles = Arrays.asList(secured.value());
         Authentication userAuthentication = SecurityContextHolder.getContext().getAuthentication();
-        return userAuthentication.getAuthorities().stream() // (2)
+        return userAuthentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .anyMatch(allowedRoles::contains);
     }
