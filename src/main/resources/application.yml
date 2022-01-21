@@ -1,0 +1,10 @@
+spring:
+  main:
+    allow-circular-references: 'true'
+keycloak:
+  auth-server-url: http://localhost:8180/auth
+  realm: myrealm
+  public-client: 'true'
+  resource: spring
+server:
+  port: '8080'
