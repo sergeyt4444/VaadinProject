@@ -11,13 +11,6 @@ import org.springframework.context.annotation.Lazy;
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
 
-    @Autowired
-    @Lazy
-    private EurekaClient eurekaClient;
-
-    @Value("${spring.application.name}")
-    private String appName;
-
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
