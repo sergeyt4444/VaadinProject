@@ -15,13 +15,14 @@ import javax.ws.rs.core.Context;
 @Component
 public class FeignInterceptor implements RequestInterceptor {
 
-    @Context
-    javax.ws.rs.core.SecurityContext securityContext;
+//    @Context
+//    javax.ws.rs.core.SecurityContext securityContext;
 
     @Override
     public void apply(RequestTemplate requestTemplate) {
-        if (securityContext != null && securityContext.getUserPrincipal() instanceof KeycloakPrincipal) {
-            KeycloakPrincipal principal = ((KeycloakPrincipal) securityContext.getUserPrincipal());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof KeycloakPrincipal) {
+            KeycloakPrincipal principal = ((KeycloakPrincipal) authentication.getPrincipal());
             AccessToken token = principal.getKeycloakSecurityContext().getToken();
             requestTemplate.header("Authorization", "Bearer " + token);
         }
