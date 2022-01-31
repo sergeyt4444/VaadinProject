@@ -11,6 +11,6 @@ import org.springframework.security.access.annotation.Secured;
 public class AdminView extends VerticalLayout {
 
     public AdminView(DemoSecurityControllerInterface controllerInterface) {
-        add(new H1("Admin page"));
+        add(new H1("Admin page " + controllerInterface.getAdminInfo()));
     }
 }
