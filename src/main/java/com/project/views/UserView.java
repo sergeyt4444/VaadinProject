@@ -12,11 +12,8 @@ import org.springframework.stereotype.Component;
 @Secured("ROLE_USER")
 public class UserView extends VerticalLayout {
 
-//    @Autowired
-//    DemoSecurityControllerInterface controllerInterface;
-
     public UserView(DemoSecurityControllerInterface controllerInterface) {
-        add(new H1("User page" + controllerInterface.getUserInfo()));
+        add(new H1("User page " + controllerInterface.getUserInfo()));
     }
 
 }

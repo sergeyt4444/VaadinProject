@@ -10,9 +10,6 @@ import org.springframework.security.access.annotation.Secured;
 @Secured("ROLE_ADMIN")
 public class AdminView extends VerticalLayout {
 
-//    @Autowired
-//    DemoSecurityControllerInterface controllerInterface;
-
     public AdminView(DemoSecurityControllerInterface controllerInterface) {
         add(new H1("Admin page"));
     }

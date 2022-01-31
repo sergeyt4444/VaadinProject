@@ -8,9 +8,6 @@ import com.vaadin.flow.router.Route;
 @Route("")
 public class TestView extends VerticalLayout {
 
-//    @Autowired
-//    DemoSecurityControllerInterface controllerInterface;
-
     public TestView(DemoSecurityControllerInterface controllerInterface) {
         System.out.println();
         add(new H1("testing " + controllerInterface.getAnonymousInfo()));
