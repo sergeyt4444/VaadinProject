@@ -19,10 +19,6 @@ public class AdminView extends VerticalLayout {
     DemoSecurityControllerInterface controllerInterface;
 
     public AdminView() {
-        Authentication userAuthentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(userAuthentication);
-        KeycloakPrincipal principal = ((KeycloakPrincipal) userAuthentication.getPrincipal());
-        System.out.println(principal.getKeycloakSecurityContext().getToken().toString());
         add(new H1("Admin page"));
     }
 }
