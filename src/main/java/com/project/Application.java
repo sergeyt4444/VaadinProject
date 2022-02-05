@@ -1,14 +1,18 @@
 package com.project;
 
+import com.project.controller.DemoSecurityControllerInterface;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
+@EnableFeignClients(clients = {DemoSecurityControllerInterface.class},
+        basePackageClasses=com.project.controller.DemoSecurityControllerInterface.class)
 public class Application extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(Application.class);
     }
 
 }
