@@ -28,7 +28,7 @@ public class CourseCategoryPanel extends VerticalLayout {
                 courseDescr = objAttr.getValue();
             }
         }
-        courseNameLabel.getElement().setProperty("innerHTML", "<b>" + courseName + "</b>");
+        courseNameLabel.getElement().setProperty("innerHTML", "<b>  " + courseName + "</b>");
         courseDescrLabel = new Label(courseDescr);
         courseDescrLabel.getStyle().set("font-size", "20px");
         courseDescrLabel.setMinHeight("52px");

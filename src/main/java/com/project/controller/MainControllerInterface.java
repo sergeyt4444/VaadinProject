@@ -10,7 +10,7 @@ import java.util.List;
 
 @FeignClient(name = "spring-backend")
 @RestController
-public interface DemoSecurityControllerInterface {
+public interface MainControllerInterface {
 
     @GetMapping("/api/anonymous")
     public String getAnonymousInfo();
