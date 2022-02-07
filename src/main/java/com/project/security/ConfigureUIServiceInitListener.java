@@ -1,8 +1,5 @@
 package com.project.security;
 
-import com.project.views.AdminView;
-import com.project.views.TestView;
-import com.project.views.UserView;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.NotFoundException;
