@@ -29,11 +29,10 @@ public class CourseCategoryPanel extends VerticalLayout {
             }
         }
         courseNameLabel.getElement().setProperty("innerHTML", "<b>" + courseName + "</b>");
-
         courseDescrLabel = new Label(courseDescr);
         courseDescrLabel.getStyle().set("font-size", "20px");
         courseDescrLabel.setMinHeight("52px");
-        courseDescrLabel.setMaxWidth("270px");
+        courseDescrLabel.setMaxWidth("320px");
 
         this.setAlignItems(Alignment.STRETCH);
 

@@ -21,10 +21,10 @@ import java.util.List;
 @Secured("ROLE_USER")
 public class MainView extends VerticalLayout {
 
-    HeaderPanel headerPanel;
-    NavPanel navPanel;
-    MainPanel mainPanel;
-    HorizontalLayout horizontalLayout;
+    private HeaderPanel headerPanel;
+    private NavPanel navPanel;
+    private MainPanel mainPanel;
+    private HorizontalLayout horizontalLayout;
 
     public MainView(DemoSecurityControllerInterface controllerInterface) {
 

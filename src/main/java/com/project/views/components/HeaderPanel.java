@@ -39,7 +39,7 @@ public class HeaderPanel extends HorizontalLayout {
         logo = new Label();
         logo.getElement().setProperty("innerHTML", "<b>Netcracker</b>");
         logo.addClassName("logo");
-        logo.getStyle().set("font-size", "44px");
+        logo.getStyle().set("font-size", "32px");
         logo.getStyle().set("color", "mediumblue");
 
         logoLayout = new HorizontalLayout(logoImage, logo);
