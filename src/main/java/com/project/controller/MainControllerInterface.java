@@ -2,6 +2,7 @@ package com.project.controller;
 
 import com.project.entity.Obj;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +29,6 @@ public interface MainControllerInterface {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("api/main_categories")
-    public List<Obj> getMainCategories();
+    public ResponseEntity<List<Obj>> getMainCategories();
 
 }
