@@ -3,19 +3,20 @@ package com.project.views.components;
 
 import com.project.entity.Obj;
 import com.project.entity.ObjAttr;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+@CssImport("./styles/styles.css")
 public class CourseCategoryPanel extends VerticalLayout {
 
     private Label courseNameLabel;
     private Label courseDescrLabel;
 
     public CourseCategoryPanel(Obj obj) {
-        this.getStyle().set("background-color", "#f0f0f0");
+        addClassName("course-category-panel");
         courseNameLabel = new Label();
-        courseNameLabel.getStyle().set("font-size", "28px");
-        courseNameLabel.getStyle().set("background-color", "#d8d8d8");
+        courseNameLabel.addClassName("course-name-label");
         String courseName = "";
         String courseDescr = "";
         for (ObjAttr objAttr: obj.getObjAttrs()) {
@@ -28,11 +29,9 @@ public class CourseCategoryPanel extends VerticalLayout {
                 courseDescr = objAttr.getValue();
             }
         }
-        courseNameLabel.getElement().setProperty("innerHTML", "<b>  " + courseName + "</b>");
+        courseNameLabel.getElement().setProperty("innerHTML", "<b>" + courseName + "</b>");
         courseDescrLabel = new Label(courseDescr);
-        courseDescrLabel.getStyle().set("font-size", "20px");
-        courseDescrLabel.setMinHeight("52px");
-        courseDescrLabel.setMaxWidth("320px");
+        courseDescrLabel.setClassName("course-description-label");
 
         this.setAlignItems(Alignment.STRETCH);
 

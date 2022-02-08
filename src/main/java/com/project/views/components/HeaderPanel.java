@@ -2,6 +2,7 @@ package com.project.views.components;
 
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -13,6 +14,7 @@ import org.keycloak.KeycloakPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+@CssImport("./styles/styles.css")
 public class HeaderPanel extends HorizontalLayout {
 
     private Image logoImage;
@@ -28,19 +30,17 @@ public class HeaderPanel extends HorizontalLayout {
     private VerticalLayout userButtonLayout;
 
     public HeaderPanel() {
+        this.setClassName("header-panel");
 
         StreamResource imageResource = new StreamResource(
                 "logo.png",
                 () -> getClass().getResourceAsStream("/images/logo.png"));
         logoImage = new Image(imageResource,"Netcracker");
-        logoImage.setWidth("180px");
-        logoImage.setHeight("100px");
+        logoImage.setClassName("logo-image");
 
         logo = new Label();
         logo.getElement().setProperty("innerHTML", "<b>Netcracker</b>");
         logo.addClassName("logo");
-        logo.getStyle().set("font-size", "32px");
-        logo.getStyle().set("color", "mediumblue");
 
         logoLayout = new HorizontalLayout(logoImage, logo);
         logoLayout.setAlignItems(Alignment.CENTER);
@@ -49,9 +49,7 @@ public class HeaderPanel extends HorizontalLayout {
         searchBar = new TextField();
         searchBar.setPlaceholder("Search");
         searchBar.setPrefixComponent(VaadinIcon.SEARCH.create());
-        searchBar.setMinWidth("48%");
-        searchBar.setMaxWidth("48%");
-        searchBar.getStyle().set("font-size", "24px");
+        searchBar.setClassName("search-bar");
 
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -61,7 +59,7 @@ public class HeaderPanel extends HorizontalLayout {
         userAvatar = new Avatar(username);
 
         userLabel = new Label(username);
-        userLabel.getStyle().set("font-size", "20px");
+        userLabel.setClassName("user-label");
 
 
         profileButton = new Button("Профиль");
@@ -77,13 +75,12 @@ public class HeaderPanel extends HorizontalLayout {
 
         userPanelLayout = new HorizontalLayout(userAvatar, userLabel, userButtonLayout);
         userPanelLayout.setAlignItems(Alignment.CENTER);
-        userPanelLayout.setMinWidth("15%");
+        userPanelLayout.setClassName("user-panel-layout");
 
         add(logoLayout, searchBar, userPanelLayout);
 
         this.setAlignItems(Alignment.CENTER);
         this.setJustifyContentMode(JustifyContentMode.BETWEEN);
-        this.setMinWidth("100%");
     }
 
 }

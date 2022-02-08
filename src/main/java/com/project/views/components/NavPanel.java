@@ -13,8 +13,7 @@ public class NavPanel extends VerticalLayout {
     private Button contactPageButton;
 
     public NavPanel() {
-        getStyle().set("background-color", "#f0f0f0");
-        setMinHeight("700px");
+        this.setClassName("nav-panel");
 
         mainPageButton = new Button("Главная страница");
         mainPageButton.addClickListener(click -> {

@@ -1,0 +1,57 @@
+.header-panel {
+    min-width: 100%;
+}
+
+.logo {
+    font-size: 32px;
+    color: mediumblue;
+}
+
+.course-category-panel {
+    background-color: #f0f0f0;
+    max-height: 200px;
+    max-width: 300px;
+}
+
+.course-name-label {
+    font-size: 28px;
+    background-color: #d8d8d8;
+}
+
+.course-description-label {
+    font-size: 20px;
+    min-height: 52px;
+    max-width: 320px;
+}
+
+.main-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 10px;
+    margin-left: 100px;
+    min-width: 80%;
+    min-height: 90%;
+}
+
+.logo-image {
+    height: 100px;
+    width: 180px;
+}
+
+.search-bar {
+    min-width: 48%;
+    font-size: 24px;
+}
+
+.user-label {
+    font-size: 20px;
+}
+
+.user-panel-layout {
+    font-size: 20px;
+}
+
+.nav-panel {
+    background-color: #f0f0f0;
+    min-height: 700px;
+}
