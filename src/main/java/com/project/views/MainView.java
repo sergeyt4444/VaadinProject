@@ -2,6 +2,7 @@ package com.project.views;
 
 import com.project.controller.MainControllerInterface;
 import com.project.entity.Obj;
+import com.project.tools.ObjectConverter;
 import com.project.views.components.HeaderPanel;
 import com.project.views.components.MainPanel;
 import com.project.views.components.NavPanel;
@@ -12,6 +13,7 @@ import com.vaadin.flow.router.Route;
 import org.springframework.security.access.annotation.Secured;
 
 import java.util.List;
+import java.util.Map;
 
 
 @Route("vaadin_project/user")
@@ -28,7 +30,8 @@ public class MainView extends VerticalLayout {
         headerPanel = new HeaderPanel();
         navPanel = new NavPanel();
         List<Obj> objList = controllerInterface.getMainCategories().getBody();
-        mainPanel = new MainPanel(objList);
+        List<Map<Integer, String>> mappedObjList = ObjectConverter.convertListOfObjects(objList);
+        mainPanel = new MainPanel(mappedObjList);
         horizontalLayout = new HorizontalLayout(navPanel, mainPanel);
         horizontalLayout.setMinHeight("700px");
         horizontalLayout.setAlignItems(Alignment.STRETCH);
