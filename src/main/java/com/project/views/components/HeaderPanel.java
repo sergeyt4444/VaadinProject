@@ -1,15 +1,22 @@
 package com.project.views.components;
 
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.server.StreamResource;
+import com.vaadin.flow.server.VaadinSession;
 import org.keycloak.KeycloakPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,7 +51,7 @@ public class HeaderPanel extends HorizontalLayout {
 
         logoLayout = new HorizontalLayout(logoImage, logo);
         logoLayout.setAlignItems(Alignment.CENTER);
-        logoLayout.setMargin(false);
+        logoLayout.setClassName("logo-layout");
 
         searchBar = new TextField();
         searchBar.setPlaceholder("Search");
@@ -57,6 +64,7 @@ public class HeaderPanel extends HorizontalLayout {
         String username = principal.getKeycloakSecurityContext().getToken().getPreferredUsername();
 
         userAvatar = new Avatar(username);
+        userAvatar.setClassName("user-avatar");
 
         userLabel = new Label(username);
         userLabel.setClassName("user-label");
@@ -70,10 +78,23 @@ public class HeaderPanel extends HorizontalLayout {
         currentCoursesButton.addClickListener(click -> {
         });
 
-        userButtonLayout = new VerticalLayout(profileButton, currentCoursesButton);
-        userButtonLayout.setAlignItems(Alignment.STRETCH);
+//        userButtonLayout = new VerticalLayout(profileButton, currentCoursesButton);
+//        userButtonLayout.setAlignItems(Alignment.STRETCH);
 
-        userPanelLayout = new HorizontalLayout(userAvatar, userLabel, userButtonLayout);
+        MenuBar menuBar = new MenuBar();
+        menuBar.setClassName("menu-bar");
+
+        ComponentEventListener<ClickEvent<MenuItem>> listener = click -> {
+            getUI().get().getPage().setLocation("http://localhost:8081/sso/logout");
+        };
+
+        MenuItem menuItem = menuBar.addItem(userLabel);
+        SubMenu subMenu = menuItem.getSubMenu();
+        subMenu.addItem("Профиль");
+//        subMenu.addItem("Текущие курсы");
+        subMenu.addItem("Выход", listener);
+
+        userPanelLayout = new HorizontalLayout(userAvatar, menuBar);
         userPanelLayout.setAlignItems(Alignment.CENTER);
         userPanelLayout.setClassName("user-panel-layout");
 

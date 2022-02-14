@@ -40,9 +40,16 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
         super.configure(http);
         http
                 .authorizeRequests()
-                .antMatchers("vaadin_project/admin").hasRole("ADMIN")
+                .antMatchers("/vaadin_project/admin").hasRole("ADMIN")
+                .antMatchers("/vaadin_project/course_creation").hasRole("ADMIN")
                 .antMatchers("/vaadin_project/user").hasRole("USER")
+                .antMatchers("/vaadin_project/main_page").hasRole("USER")
+                .antMatchers("/vaadin_project/login").anonymous()
                 .anyRequest().fullyAuthenticated();
         http.csrf().disable();
+        http
+                .logout()
+                .logoutUrl("/sso/logout").permitAll()
+                .logoutSuccessUrl("/vaadin_project/login");
     }
 }

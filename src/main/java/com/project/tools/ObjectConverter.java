@@ -2,6 +2,7 @@ package com.project.tools;
 
 import com.project.entity.Obj;
 import com.project.entity.ObjAttr;
+import org.springframework.security.core.parameters.P;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +26,15 @@ public class ObjectConverter {
             result.add(mappedObj);
         }
         return result;
+    }
+
+    public static boolean validateMappedObject(Map<Integer, String> mappedObj) {
+        for (String attrValue: mappedObj.values()) {
+            if (attrValue == null || attrValue.length() <= 2 || attrValue.length() > 250) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }
