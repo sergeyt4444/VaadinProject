@@ -2,7 +2,6 @@ package com.project.tools;
 
 import com.project.entity.Obj;
 import com.project.entity.ObjAttr;
-import org.springframework.security.core.parameters.P;
 
 import java.util.ArrayList;
 import java.util.HashMap;

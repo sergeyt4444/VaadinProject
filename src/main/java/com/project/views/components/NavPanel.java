@@ -1,12 +1,10 @@
 package com.project.views.components;
 
 import com.project.controller.MainControllerInterface;
-import com.project.views.TestView;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -17,7 +15,6 @@ public class NavPanel extends VerticalLayout {
     private Button catPageButton;
     private Button recentCourcesButton;
     private Button courseCalendarButton;
-    private Button contactPageButton;
 
     private Button addCourseButton;
 
@@ -50,9 +47,6 @@ public class NavPanel extends VerticalLayout {
         if (userAuthentication != null && userAuthentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
             addCourseButton = new Button("Добавить курс");
             addCourseButton.addClickListener(click -> {
-//                addCourseButton.getUI().ifPresent(ui -> {
-//                    ui.navigate("vaadin_project/course_creation");
-//                });
                 Dialog dialog = new Dialog();
                 dialog.getElement().setAttribute("aria-label", "Create new course");
 

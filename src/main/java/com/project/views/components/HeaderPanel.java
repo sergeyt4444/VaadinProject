@@ -2,7 +2,6 @@ package com.project.views.components;
 
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.contextmenu.MenuItem;
@@ -13,10 +12,8 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.server.StreamResource;
-import com.vaadin.flow.server.VaadinSession;
 import org.keycloak.KeycloakPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,7 +31,6 @@ public class HeaderPanel extends HorizontalLayout {
 
     private HorizontalLayout logoLayout;
     private HorizontalLayout userPanelLayout;
-    private VerticalLayout userButtonLayout;
 
     public HeaderPanel() {
         this.setClassName("header-panel");
@@ -78,8 +74,6 @@ public class HeaderPanel extends HorizontalLayout {
         currentCoursesButton.addClickListener(click -> {
         });
 
-//        userButtonLayout = new VerticalLayout(profileButton, currentCoursesButton);
-//        userButtonLayout.setAlignItems(Alignment.STRETCH);
 
         MenuBar menuBar = new MenuBar();
         menuBar.setClassName("menu-bar");
@@ -91,7 +85,6 @@ public class HeaderPanel extends HorizontalLayout {
         MenuItem menuItem = menuBar.addItem(userLabel);
         SubMenu subMenu = menuItem.getSubMenu();
         subMenu.addItem("Профиль");
-//        subMenu.addItem("Текущие курсы");
         subMenu.addItem("Выход", listener);
 
         userPanelLayout = new HorizontalLayout(userAvatar, menuBar);
