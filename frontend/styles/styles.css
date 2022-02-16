@@ -116,3 +116,23 @@
     align-content: center;
     text-align: center;
 }
+
+.profile-tf {
+    margin-top: 0px;
+}
+
+.profile-panel {
+    background-color: #f0f0f0;
+    min-width: 500px;
+    margin-right: 50%;
+    margin-left: 50%;
+}
+
+.profile-avatar {
+    height: 100px;
+    width: 100px;
+}
+
+.profile-button-layout {
+    margin-top: 50px;
+}

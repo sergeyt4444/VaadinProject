@@ -66,26 +66,33 @@ public class HeaderPanel extends HorizontalLayout {
         userLabel.setClassName("user-label");
 
 
-        profileButton = new Button("Профиль");
-        profileButton.addClickListener(click -> {
-        });
-
-        currentCoursesButton = new Button("Текущие курсы");
-        currentCoursesButton.addClickListener(click -> {
-        });
+//        profileButton = new Button("Профиль");
+//        profileButton.addClickListener(click -> {
+//            profileButton.getUI().ifPresent(ui -> {
+//                ui.navigate("vaadin_project/profile");
+//            });
+//        });
+//
+//        currentCoursesButton = new Button("Текущие курсы");
+//        currentCoursesButton.addClickListener(click -> {
+//        });
 
 
         MenuBar menuBar = new MenuBar();
         menuBar.setClassName("menu-bar");
 
-        ComponentEventListener<ClickEvent<MenuItem>> listener = click -> {
+        ComponentEventListener<ClickEvent<MenuItem>> logoutListener = click -> {
             getUI().get().getPage().setLocation("http://localhost:8081/sso/logout");
+        };
+
+        ComponentEventListener<ClickEvent<MenuItem>> profileListener = click -> {
+            getUI().get().getPage().setLocation("http://localhost:8081/vaadin_project/profile");
         };
 
         MenuItem menuItem = menuBar.addItem(userLabel);
         SubMenu subMenu = menuItem.getSubMenu();
-        subMenu.addItem("Профиль");
-        subMenu.addItem("Выход", listener);
+        subMenu.addItem("Профиль", profileListener);
+        subMenu.addItem("Выход", logoutListener);
 
         userPanelLayout = new HorizontalLayout(userAvatar, menuBar);
         userPanelLayout.setAlignItems(Alignment.CENTER);
