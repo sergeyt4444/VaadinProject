@@ -2,6 +2,7 @@ package com.project.controller;
 
 import com.project.entity.Attribute;
 import com.project.entity.Obj;
+import com.project.entity.ObjectTypeEnum;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,9 +34,29 @@ public interface MainControllerInterface {
     @GetMapping("/api/main_categories")
     public ResponseEntity<List<Obj>> getMainCategories();
 
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/api/category/{name}")
+    public ResponseEntity<Obj> getCategoryByName(@PathVariable(value = "name")String name);
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/api/categories/{pid}")
+    public ResponseEntity<List<Obj>> getSubCategories(@PathVariable(value = "pid")Integer parentId);
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/api/object_by_id/{id}")
+    public ResponseEntity<Obj> getObjectById(@PathVariable(value = "id")Integer id);
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/api/courses/{pid}")
+    public ResponseEntity<List<Obj>> getCourses(@PathVariable(value = "pid")Integer parentId);
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/api/categories")
+    public ResponseEntity createCategory(@RequestBody Map<Integer, String> mappedObj);
+
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/api/courses")
-    public ResponseEntity createObj(@RequestBody Map<Integer, String> mappedObj);
+    public ResponseEntity createCourse(@RequestBody Map<Integer, String> mappedObj);
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/api/attributes")

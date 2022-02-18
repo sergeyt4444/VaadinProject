@@ -5,6 +5,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.server.VaadinSession;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -16,27 +17,28 @@ public class NavPanel extends VerticalLayout {
     private Button recentCourcesButton;
     private Button courseCalendarButton;
 
+    private Button addCategoryButton;
     private Button addCourseButton;
 
     public NavPanel(MainControllerInterface controllerInterface) {
         this.setClassName("nav-panel");
 
-        mainPageButton = new Button("Главная страница");
+        mainPageButton = new Button("Main page");
         mainPageButton.addClickListener(click -> {
             mainPageButton.getUI().ifPresent(ui -> {
                 ui.navigate("vaadin_project/main_page");
             });
         });
         mainPageButton.setClassName("nav-button");
-        catPageButton = new Button("Категории");
+        catPageButton = new Button("Categories");
         catPageButton.addClickListener(click -> {
         });
         catPageButton.setClassName("nav-button");
-        recentCourcesButton = new Button("Новые тренинги");
+        recentCourcesButton = new Button("New trainings");
         recentCourcesButton.addClickListener(click -> {
         });
         recentCourcesButton.setClassName("nav-button");
-        courseCalendarButton = new Button("Запланированные курсы");
+        courseCalendarButton = new Button("Upcoming courses");
         courseCalendarButton.addClickListener(click -> {
         });
         courseCalendarButton.setClassName("nav-button");
@@ -45,20 +47,37 @@ public class NavPanel extends VerticalLayout {
 
         Authentication userAuthentication = SecurityContextHolder.getContext().getAuthentication();
         if (userAuthentication != null && userAuthentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
-            addCourseButton = new Button("Добавить курс");
-            addCourseButton.addClickListener(click -> {
+            addCategoryButton = new Button("Add category");
+            addCategoryButton.addClickListener(click -> {
                 Dialog dialog = new Dialog();
-                dialog.getElement().setAttribute("aria-label", "Create new course");
 
-                CourseCreationPanel courseCreationPanel = new CourseCreationPanel(controllerInterface, dialog);
+                CategoryCreationPanel categoryCreationPanel = new CategoryCreationPanel(controllerInterface, dialog);
                 dialog.setModal(false);
                 dialog.setDraggable(true);
 
-                dialog.add(courseCreationPanel);
+                dialog.add(categoryCreationPanel);
                 dialog.open();
             });
-            addCourseButton.setClassName("nav-button-admin");
-            add(new Hr(), addCourseButton);
+            addCategoryButton.setClassName("nav-button-admin");
+            add(new Hr(), addCategoryButton);
+
+            String rootCategoryId = VaadinSession.getCurrent().getAttribute("root category id").toString();
+            if (rootCategoryId != null && !rootCategoryId.equals("0")) {
+                addCourseButton = new Button("Add course");
+                addCourseButton.addClickListener(click -> {
+                    Dialog dialog = new Dialog();
+
+                    CourseCreationPanel courseCreationPanel = new CourseCreationPanel(controllerInterface, dialog);
+                    dialog.setModal(false);
+                    dialog.setDraggable(true);
+
+                    dialog.add(courseCreationPanel);
+                    dialog.open();
+
+                });
+                addCourseButton.setClassName("nav-button-admin");
+                add(addCourseButton);
+            }
         }
     }
 

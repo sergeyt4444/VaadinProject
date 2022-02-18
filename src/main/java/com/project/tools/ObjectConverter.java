@@ -1,12 +1,10 @@
 package com.project.tools;
 
+import com.project.entity.AttrEnum;
 import com.project.entity.Obj;
 import com.project.entity.ObjAttr;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ObjectConverter {
 
@@ -15,6 +13,7 @@ public class ObjectConverter {
         for(ObjAttr objAttr: obj.getObjAttrs()) {
             result.put(objAttr.getAttribute().getAttrId(), objAttr.getValue());
         }
+        result.put(-1, Integer.toString(obj.getObjId()));
         return result;
     }
 
@@ -28,12 +27,19 @@ public class ObjectConverter {
     }
 
     public static boolean validateMappedObject(Map<Integer, String> mappedObj) {
-        for (String attrValue: mappedObj.values()) {
+        List<String> attrValues =new ArrayList<>();
+        attrValues.add(mappedObj.get(AttrEnum.COURSE_NAME.getValue()));
+        attrValues.add(mappedObj.get(AttrEnum.COURSE_DESCRIPTION.getValue()));
+        for (String attrValue: attrValues) {
             if (attrValue == null || attrValue.length() <= 2 || attrValue.length() > 250) {
                 return false;
             }
         }
         return true;
+    }
+
+    public static int getIdFromMappedObj(Map<Integer, String> mappedObj) {
+        return Integer.parseInt(mappedObj.get(-1));
     }
 
 }

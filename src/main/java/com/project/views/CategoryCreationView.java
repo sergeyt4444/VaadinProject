@@ -1,46 +1,33 @@
 package com.project.views;
 
 import com.project.controller.MainControllerInterface;
-import com.project.entity.Obj;
-import com.project.tools.ObjectConverter;
+import com.project.views.components.CategoryCreationPanel;
 import com.project.views.components.HeaderPanel;
-import com.project.views.components.CategoriesDiv;
 import com.project.views.components.NavPanel;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.VaadinSession;
 import org.springframework.security.access.annotation.Secured;
 
-import java.util.List;
-import java.util.Map;
 
-
-@Route("vaadin_project/main_page")
-@Secured("ROLE_USER")
-public class MainView extends VerticalLayout {
+@Route("vaadin_project/course_creation")
+@Secured("ROLE_ADMIN")
+public class CategoryCreationView extends VerticalLayout {
 
     private HeaderPanel headerPanel;
     private NavPanel navPanel;
-    private CategoriesDiv mainPanel;
+    private CategoryCreationPanel courseCreationPanel;
     private HorizontalLayout horizontalLayout;
 
-    public MainView(MainControllerInterface controllerInterface) {
+    public CategoryCreationView(MainControllerInterface controllerInterface) {
 
-        this.setHeight("100%");
-
-        UI.getCurrent().getSession().setAttribute("root category id", "0");
         headerPanel = new HeaderPanel();
         navPanel = new NavPanel(controllerInterface);
-        List<Obj> objList = controllerInterface.getMainCategories().getBody();
-        List<Map<Integer, String>> mappedObjList = ObjectConverter.convertListOfObjects(objList);
-        mainPanel = new CategoriesDiv(mappedObjList);
-        horizontalLayout = new HorizontalLayout(navPanel, mainPanel);
-        horizontalLayout.setHeight("100%");
+        courseCreationPanel = new CategoryCreationPanel(controllerInterface, null);
+        horizontalLayout = new HorizontalLayout(navPanel, courseCreationPanel);
         horizontalLayout.setMinHeight("700px");
         horizontalLayout.setAlignItems(Alignment.STRETCH);
 

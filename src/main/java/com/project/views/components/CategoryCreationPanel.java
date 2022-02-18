@@ -5,6 +5,7 @@ import com.project.entity.AttrEnum;
 import com.project.tools.ObjectConverter;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
@@ -17,30 +18,30 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-public class CourseCreationPanel extends FormLayout {
 
-    TextField courseNameField;
-    TextField courseDescrField;
-    Button submitCourse;
+@CssImport("./styles/styles.css")
+public class CategoryCreationPanel extends FormLayout {
+
+    TextField categoryNameField;
+    TextField categoryDescrField;
+    Button submitCategory;
     Button closeDialog;
 
-    public CourseCreationPanel(MainControllerInterface controllerInterface, Dialog dialog) {
+    public CategoryCreationPanel(MainControllerInterface controllerInterface, Dialog dialog) {
         this.setClassName("course-creation-panel");
 
-        courseNameField = new TextField("Course name");
-        courseNameField.addClassName("course-creation-tf");
-        courseDescrField = new TextField("Course description");
-        courseDescrField.addClassName("course-creation-tf");
-        submitCourse = new Button("Create course");
-        submitCourse.addClassName("course-creation-button");
-        submitCourse.addClickListener(click -> {
+        categoryNameField = new TextField("Category name");
+        categoryNameField.addClassName("course-creation-tf");
+        categoryDescrField = new TextField("Category description");
+        categoryDescrField.addClassName("course-creation-tf");
+        submitCategory = new Button("Create category");
+        submitCategory.addClassName("course-creation-button");
+        submitCategory.addClickListener(click -> {
             Map<Integer, String> courseAttrs = new HashMap<>();
-            courseAttrs.put(AttrEnum.COURSE_NAME.getValue(), courseNameField.getValue());
-            courseAttrs.put(AttrEnum.COURSE_DESCRIPTION.getValue(), courseDescrField.getValue());
+            courseAttrs.put(AttrEnum.COURSE_NAME.getValue(), categoryNameField.getValue());
+            courseAttrs.put(AttrEnum.COURSE_DESCRIPTION.getValue(), categoryDescrField.getValue());
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             KeycloakPrincipal principal = ((KeycloakPrincipal) authentication.getPrincipal());
             String username = principal.getKeycloakSecurityContext().getToken().getPreferredUsername();
@@ -58,9 +59,9 @@ public class CourseCreationPanel extends FormLayout {
             }
 
             if (ObjectConverter.validateMappedObject(courseAttrs)) {
-                controllerInterface.createCourse(courseAttrs);
+                controllerInterface.createCategory(courseAttrs);
                 UI.getCurrent().getPage().reload();
-                Notification notification = new Notification("Course has been created");
+                Notification notification = new Notification("Category has been created");
                 notification.setPosition(Notification.Position.TOP_END);
                 notification.open();
             }
@@ -78,9 +79,10 @@ public class CourseCreationPanel extends FormLayout {
             dialog.close();
         });
 
-        this.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 2));
-        this.setColspan(courseNameField, 2);
-        this.setColspan(courseDescrField, 2);
-        add(courseNameField, courseDescrField, submitCourse, closeDialog);
+        this.setResponsiveSteps(new ResponsiveStep("0", 2));
+        this.setColspan(categoryNameField, 2);
+        this.setColspan(categoryDescrField, 2);
+        add(categoryNameField, categoryDescrField, submitCategory, closeDialog);
     }
+
 }

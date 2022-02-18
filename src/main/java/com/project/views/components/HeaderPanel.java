@@ -7,6 +7,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -81,8 +82,10 @@ public class HeaderPanel extends HorizontalLayout {
         MenuBar menuBar = new MenuBar();
         menuBar.setClassName("menu-bar");
 
+
         ComponentEventListener<ClickEvent<MenuItem>> logoutListener = click -> {
-            getUI().get().getPage().setLocation("http://localhost:8081/sso/logout");
+            getUI().get().getPage().setLocation("http://localhost:8180/auth/realms/myrealm/protocol/openid-connect/logout?redirect_uri=" +
+                    "http://localhost:8081/vaadin_project/main_page");
         };
 
         ComponentEventListener<ClickEvent<MenuItem>> profileListener = click -> {
@@ -91,8 +94,8 @@ public class HeaderPanel extends HorizontalLayout {
 
         MenuItem menuItem = menuBar.addItem(userLabel);
         SubMenu subMenu = menuItem.getSubMenu();
-        subMenu.addItem("Профиль", profileListener);
-        subMenu.addItem("Выход", logoutListener);
+        subMenu.addItem("Profile", profileListener);
+        subMenu.addItem("Logout", logoutListener);
 
         userPanelLayout = new HorizontalLayout(userAvatar, menuBar);
         userPanelLayout.setAlignItems(Alignment.CENTER);

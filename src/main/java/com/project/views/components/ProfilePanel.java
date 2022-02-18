@@ -54,22 +54,22 @@ public class ProfilePanel extends VerticalLayout {
         avatar = new Avatar(username);
         avatar.setClassName("profile-avatar");
 
-        usernameField = new TextField("Логин: ");
+        usernameField = new TextField("Username: ");
         usernameField.setValue(username);
         usernameField.setClassName("profile-tf");
         usernameField.setReadOnly(true);
 
-        roleField = new TextField("Уровень доступа: ");
+        roleField = new TextField("Access level: ");
         roleField.setValue(getUserRole(authentication));
         roleField.setClassName("profile-tf");
         roleField.setReadOnly(true);
 
-        givenNameField = new TextField("Имя: ");
+        givenNameField = new TextField("Given name: ");
         givenNameField.setValue(gname);
         givenNameField.setClassName("profile-tf");
         givenNameField.setReadOnly(true);
 
-        familyNameField = new TextField("Фамилия: ");
+        familyNameField = new TextField("Family name: ");
         familyNameField.setValue(fname);
         familyNameField.setClassName("profile-tf");
         familyNameField.setReadOnly(true);
@@ -79,7 +79,7 @@ public class ProfilePanel extends VerticalLayout {
         emailField.setClassName("profile-tf");
         emailField.setReadOnly(true);
 
-        phoneField = new TextField("Телефон: ");
+        phoneField = new TextField("Phone: ");
         phoneField.setValue(phone);
         phoneField.setClassName("profile-tf");
         phoneField.setReadOnly(true);
@@ -87,13 +87,13 @@ public class ProfilePanel extends VerticalLayout {
         buttonLayout = new HorizontalLayout();
         buttonLayout.setClassName("profile-button-layout");
 
-        lastCoursesButton = new Button("Последние курсы");
+        lastCoursesButton = new Button("Latest courses");
         lastCoursesButton.addClassName("profile-button");
         lastCoursesButton.addClickListener(click -> {
 
         });
 
-        currentCoursesButton = new Button("Текущие курсы");
+        currentCoursesButton = new Button("Current courses");
         currentCoursesButton.addClassName("profile-button");
         currentCoursesButton.addClickListener(click -> {
 
@@ -108,10 +108,10 @@ public class ProfilePanel extends VerticalLayout {
     private String getUserRole(Authentication authentication) {
         if (authentication != null ) {
             if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
-                return "Администратор";
+                return "Administrator";
             }
             else {
-                return "Пользователь";
+                return "User";
             }
         }
         return "";

@@ -3,46 +3,46 @@ package com.project.views;
 import com.project.controller.MainControllerInterface;
 import com.project.entity.Obj;
 import com.project.tools.ObjectConverter;
-import com.project.views.components.HeaderPanel;
 import com.project.views.components.CategoriesDiv;
+import com.project.views.components.CoursePanel;
+import com.project.views.components.HeaderPanel;
 import com.project.views.components.NavPanel;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Hr;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.VaadinSession;
 import org.springframework.security.access.annotation.Secured;
 
 import java.util.List;
 import java.util.Map;
 
-
-@Route("vaadin_project/main_page")
+@Route("vaadin_project/course")
 @Secured("ROLE_USER")
-public class MainView extends VerticalLayout {
+public class CourseView extends VerticalLayout {
 
     private HeaderPanel headerPanel;
     private NavPanel navPanel;
-    private CategoriesDiv mainPanel;
+    private CoursePanel coursePanel;
     private HorizontalLayout horizontalLayout;
 
-    public MainView(MainControllerInterface controllerInterface) {
-
+    public CourseView(MainControllerInterface controllerInterface) {
         this.setHeight("100%");
 
         UI.getCurrent().getSession().setAttribute("root category id", "0");
         headerPanel = new HeaderPanel();
         navPanel = new NavPanel(controllerInterface);
-        List<Obj> objList = controllerInterface.getMainCategories().getBody();
-        List<Map<Integer, String>> mappedObjList = ObjectConverter.convertListOfObjects(objList);
-        mainPanel = new CategoriesDiv(mappedObjList);
-        horizontalLayout = new HorizontalLayout(navPanel, mainPanel);
+        Obj course = controllerInterface.getObjectById(27).getBody();
+        Map<Integer, String> mappedObj = ObjectConverter.convertObject(course);
+        coursePanel = new CoursePanel(mappedObj);
+        horizontalLayout = new HorizontalLayout(navPanel, coursePanel);
         horizontalLayout.setHeight("100%");
         horizontalLayout.setMinHeight("700px");
-        horizontalLayout.setAlignItems(Alignment.STRETCH);
+        horizontalLayout.setMinWidth("85%");
+        horizontalLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
 
         this.setSizeFull();
         FlexLayout footerLayout = new FlexLayout();
@@ -50,8 +50,8 @@ public class MainView extends VerticalLayout {
         Div footer = new Div();
         footer.addClassName("footer");
         footer.setText("Contact info: E-mail: adminmail@mail.ru, phone: 7(999)999-9999");
-        footerLayout.setAlignItems(Alignment.END);
-        footerLayout.setJustifyContentMode(JustifyContentMode.CENTER);
+        footerLayout.setAlignItems(FlexComponent.Alignment.END);
+        footerLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
         footerLayout.getElement().getStyle().set("order", "999");
         footerLayout.add(footer);
 
@@ -59,6 +59,5 @@ public class MainView extends VerticalLayout {
         add(footerLayout);
         expand(footerLayout);
     }
-
 
 }
