@@ -27,4 +27,13 @@ public class ObjectConverter {
         return result;
     }
 
+    public static boolean validateMappedObject(Map<Integer, String> mappedObj) {
+        for (String attrValue: mappedObj.values()) {
+            if (attrValue == null || attrValue.length() <= 2 || attrValue.length() > 250) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

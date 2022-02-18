@@ -56,14 +56,22 @@
     font-size: 20px;
 }
 
+.user-avatar {
+}
+
 .user-panel-layout {
     font-size: 20px;
+}
+
+.menu-bar {
+    padding-right: 75px;
 }
 
 .nav-panel {
     background-color: #f0f0f0;
     min-height: 700px;
     min-width: 252px;
+    max-width: 252px;
 }
 
 .nav-button {
@@ -73,4 +81,58 @@
     margin-right: 12px;
     margin-top: 18px;
     align-content: center;
+}
+
+.nav-button-admin {
+    min-width: 200px;
+    padding: 0px;
+    margin-left: 12px;
+    margin-right: 12px;
+    margin-top: 6px;
+    align-content: center;
+    background-color: #b8b8f0;
+}
+
+.course-creation-panel {
+    padding:20px;
+    background-color: #f0f0f0;
+}
+
+.course-creation-tf {
+    margin-bottom: 15px;
+}
+
+.course-creation-button {
+}
+
+.footer-layout {
+    min-width: 100%;
+    align-content: center;
+}
+
+.footer {
+    min-width: 100%;
+    background-color: #f0f0f0;
+    align-content: center;
+    text-align: center;
+}
+
+.profile-tf {
+    margin-top: 0px;
+}
+
+.profile-panel {
+    background-color: #f0f0f0;
+    min-width: 500px;
+    margin-right: 50%;
+    margin-left: 50%;
+}
+
+.profile-avatar {
+    height: 100px;
+    width: 100px;
+}
+
+.profile-button-layout {
+    margin-top: 50px;
 }
