@@ -6,6 +6,7 @@ import com.project.tools.ObjectConverter;
 import com.project.views.components.HeaderPanel;
 import com.project.views.components.NavPanel;
 import com.project.views.components.ProfilePanel;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
@@ -27,6 +28,8 @@ public class ProfileView extends VerticalLayout {
     private HorizontalLayout horizontalLayout;
 
     public ProfileView(MainControllerInterface controllerInterface) {
+
+        UI.getCurrent().getSession().setAttribute("root category id", "0");
 
         headerPanel = new HeaderPanel();
         navPanel = new NavPanel(controllerInterface);

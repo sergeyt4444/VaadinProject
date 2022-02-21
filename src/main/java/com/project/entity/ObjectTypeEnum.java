@@ -1,7 +1,7 @@
 package com.project.entity;
 
 public enum ObjectTypeEnum {
-    CATEGORY(1), COURSE(2);
+    CATEGORY(1), COURSE(2), USER(3);
 
     private final int objTypeId;
 

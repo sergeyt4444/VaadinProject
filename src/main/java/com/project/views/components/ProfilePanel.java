@@ -23,7 +23,7 @@ public class ProfilePanel extends VerticalLayout {
     private TextField emailField;
     private TextField phoneField;
     private HorizontalLayout buttonLayout;
-    private Button lastCoursesButton;
+//    private Button lastCoursesButton;
     private Button currentCoursesButton;
 
     public ProfilePanel() {
@@ -87,11 +87,11 @@ public class ProfilePanel extends VerticalLayout {
         buttonLayout = new HorizontalLayout();
         buttonLayout.setClassName("profile-button-layout");
 
-        lastCoursesButton = new Button("Latest courses");
-        lastCoursesButton.addClassName("profile-button");
-        lastCoursesButton.addClickListener(click -> {
-
-        });
+//        lastCoursesButton = new Button("Latest courses");
+//        lastCoursesButton.addClassName("profile-button");
+//        lastCoursesButton.addClickListener(click -> {
+//
+//        });
 
         currentCoursesButton = new Button("Current courses");
         currentCoursesButton.addClassName("profile-button");
@@ -99,7 +99,7 @@ public class ProfilePanel extends VerticalLayout {
 
         });
 
-        buttonLayout.add(lastCoursesButton, currentCoursesButton);
+        buttonLayout.add( currentCoursesButton);
         this.add(avatar, usernameField, roleField, givenNameField, familyNameField, emailField, phoneField, buttonLayout);
 
 

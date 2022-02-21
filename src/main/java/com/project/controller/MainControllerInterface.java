@@ -2,13 +2,16 @@ package com.project.controller;
 
 import com.project.entity.Attribute;
 import com.project.entity.Obj;
+import com.project.entity.ObjAttr;
 import com.project.entity.ObjectTypeEnum;
+import com.sun.jersey.api.NotFoundException;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,5 +68,22 @@ public interface MainControllerInterface {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/api/attributes/{id}")
     public ResponseEntity<List<Attribute>> getAttributesByObjTypeId(@PathVariable(value = "id")Integer objTypeId);
+
+
+    @PreAuthorize("hasRole('MODERATOR')")
+    @PutMapping("/api/objattrs")
+    public ResponseEntity createObjAttr(@RequestBody Map<String, String> mappedObjAttr);
+
+    @PreAuthorize("hasRole('MODERATOR')")
+    @DeleteMapping("api/objattrs/{id}")
+    public Map<String, Boolean> deleteObjAttr(@PathVariable (value = "id")Integer id);
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("api/users/{name}")
+    public ResponseEntity<Obj> getUser(@PathVariable (value = "name") String username);
+
+    @PreAuthorize("hasRole('USER')")
+    @PutMapping("api/usercourses")
+    public ResponseEntity addUserCourse(@RequestBody Map<String, String> mappedObjAttr);
 
 }

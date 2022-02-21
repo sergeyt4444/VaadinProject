@@ -2,6 +2,7 @@ package com.project.views;
 
 import com.project.controller.MainControllerInterface;
 import com.project.entity.Obj;
+import com.project.entity.ObjectTypeEnum;
 import com.project.tools.ObjectConverter;
 import com.project.views.components.CategoriesDiv;
 import com.project.views.components.CoursePanel;
@@ -14,7 +15,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import org.springframework.security.access.annotation.Secured;
 
 import java.util.List;
@@ -22,30 +23,26 @@ import java.util.Map;
 
 @Route("vaadin_project/course")
 @Secured("ROLE_USER")
-public class CourseView extends VerticalLayout {
+public class CourseView extends VerticalLayout implements BeforeEnterObserver {
+
+    MainControllerInterface controllerInterface;
 
     private HeaderPanel headerPanel;
     private NavPanel navPanel;
     private CoursePanel coursePanel;
     private HorizontalLayout horizontalLayout;
+    private FlexLayout footerLayout;
 
     public CourseView(MainControllerInterface controllerInterface) {
+        this.controllerInterface = controllerInterface;
         this.setHeight("100%");
 
         UI.getCurrent().getSession().setAttribute("root category id", "0");
         headerPanel = new HeaderPanel();
         navPanel = new NavPanel(controllerInterface);
-        Obj course = controllerInterface.getObjectById(27).getBody();
-        Map<Integer, String> mappedObj = ObjectConverter.convertObject(course);
-        coursePanel = new CoursePanel(mappedObj);
-        horizontalLayout = new HorizontalLayout(navPanel, coursePanel);
-        horizontalLayout.setHeight("100%");
-        horizontalLayout.setMinHeight("700px");
-        horizontalLayout.setMinWidth("85%");
-        horizontalLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
 
         this.setSizeFull();
-        FlexLayout footerLayout = new FlexLayout();
+        footerLayout = new FlexLayout();
         footerLayout.addClassName("footer-layout");
         Div footer = new Div();
         footer.addClassName("footer");
@@ -55,9 +52,28 @@ public class CourseView extends VerticalLayout {
         footerLayout.getElement().getStyle().set("order", "999");
         footerLayout.add(footer);
 
-        add(headerPanel, new Hr(), horizontalLayout);
-        add(footerLayout);
-        expand(footerLayout);
     }
 
+    @Override
+    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+        Location location = beforeEnterEvent.getLocation();
+        QueryParameters queryParameters = location.getQueryParameters();
+        int courseId = Integer.parseInt(queryParameters.getParameters().get("id").get(0));
+        Obj course = controllerInterface.getObjectById(courseId).getBody();
+        if (course == null || course.getObjectType().getObjTypesId() != ObjectTypeEnum.COURSE.getValue()) {
+            UI.getCurrent().navigate("404");
+        }
+        else {
+
+            coursePanel = new CoursePanel(controllerInterface, course);
+            horizontalLayout = new HorizontalLayout(navPanel, coursePanel);
+            horizontalLayout.setHeight("100%");
+            horizontalLayout.setMinHeight("700px");
+            horizontalLayout.setMinWidth("85%");
+            horizontalLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
+            add(headerPanel, new Hr(), horizontalLayout);
+            add(footerLayout);
+            expand(footerLayout);
+        }
+    }
 }

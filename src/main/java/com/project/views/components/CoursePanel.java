@@ -1,15 +1,31 @@
 package com.project.views.components;
 
+import com.project.controller.MainControllerInterface;
 import com.project.entity.AttrEnum;
+import com.project.entity.Obj;
+import com.project.entity.ObjAttr;
+import com.project.tools.AttributeTool;
+import com.project.tools.ObjectConverter;
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.component.textfield.TextField;
+import org.keycloak.KeycloakPrincipal;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,18 +38,38 @@ public class CoursePanel extends VerticalLayout {
     private Label creatorLabel;
     private Label creationDateLabel;
     private HorizontalLayout courseDataLayout;
+    private VerticalLayout headerInfoLayout;
     private VerticalLayout courseDescrLayout;
     private H2 descriptionHeader;
     private TextArea descriptionTA;
+    private HorizontalLayout primAttrLayout;
+    private Label difficultyLabel;
+    private Label languageLabel;
+    private Label formatLabel;
+    private VerticalLayout attributeSubLayout;
     private VerticalLayout attributeLayout;
+    private Scroller scroller;
     private Label attributeLabel;
-    private Button addAttributeButton;
+    private Label participantsLabel;
     private Button joinCourseButton;
+    private Button cancelCourseButton;
+    private VerticalLayout participationLayout;
+    private Label attributeManagementLabel;
+    private MenuBar attributeManagementMenu;
 
-    public CoursePanel(Map<Integer, String> mappedObj) {
+    public CoursePanel(MainControllerInterface controllerInterface, Obj obj) {
         this.setAlignItems(Alignment.CENTER);
         this.setJustifyContentMode(JustifyContentMode.START);
         this.addClassName("course-panel");
+
+        Map<Integer, String> mappedObj = ObjectConverter.convertObject(obj);
+
+        Authentication userAuthentication = SecurityContextHolder.getContext().getAuthentication();
+        KeycloakPrincipal principal = ((KeycloakPrincipal) userAuthentication.getPrincipal());
+        String username = principal.getKeycloakSecurityContext().getToken().getPreferredUsername();
+
+        Obj user = controllerInterface.getUser(username).getBody();
+        Map<Integer, String> mappedUser = ObjectConverter.convertObject(user);
 
         nameHeader = new H1(mappedObj.get(AttrEnum.COURSE_NAME.getValue()));
         nameHeader.setClassName("name-header");
@@ -41,12 +77,18 @@ public class CoursePanel extends VerticalLayout {
         creatorLabel = new Label("Created by: " + mappedObj.get(AttrEnum.CREATOR.getValue()));
         creatorLabel.setClassName("course-info-label");
 
-        creationDateLabel = new Label(mappedObj.get(AttrEnum.CREATION_DATE.getValue()));
+        creationDateLabel = new Label("Starts on " + mappedObj.get(AttrEnum.START_DATE.getValue()));
         creationDateLabel.setClassName("course-info-label");
 
         creationInfoLayout = new HorizontalLayout(creatorLabel, creationDateLabel);
         creationInfoLayout.setJustifyContentMode(JustifyContentMode.CENTER);
         creationInfoLayout.setClassName("creation-info-layout");
+
+        headerInfoLayout = new VerticalLayout(nameHeader, creationInfoLayout);
+        headerInfoLayout.setAlignItems(Alignment.CENTER);
+        headerInfoLayout.setJustifyContentMode(JustifyContentMode.START);
+        headerInfoLayout.setWidthFull();
+        headerInfoLayout.addClassName("header-info-layout");
 
         descriptionHeader = new H2("Course description");
         descriptionHeader.setClassName("description-header");
@@ -54,50 +96,174 @@ public class CoursePanel extends VerticalLayout {
         descriptionTA = new TextArea();
         descriptionTA.setValue(mappedObj.get(AttrEnum.COURSE_DESCRIPTION.getValue()));
         descriptionTA.setClassName("description-ta");
+        descriptionTA.setEnabled(false);
 
-        courseDescrLayout = new VerticalLayout(descriptionHeader, descriptionTA);
+        difficultyLabel = new Label("Difficulty: " + mappedObj.get(AttrEnum.DIFFICULTY.getValue()));
+        difficultyLabel.addClassName("prim-attr-label");
+
+        languageLabel = new Label("Language: " + mappedObj.get(AttrEnum.LANGUAGE.getValue()));
+        languageLabel.addClassName("prim-attr-label");
+
+        formatLabel = new Label("Format: " + mappedObj.get(AttrEnum.FORMAT.getValue()));
+        formatLabel.addClassName("prim-attr-label");
+
+        primAttrLayout = new HorizontalLayout(difficultyLabel, languageLabel, formatLabel);
+        primAttrLayout.setAlignItems(Alignment.CENTER);
+        primAttrLayout.setJustifyContentMode(JustifyContentMode.CENTER);
+        primAttrLayout.setClassName("prim-attr-layout");
+
+        courseDescrLayout = new VerticalLayout(descriptionHeader, descriptionTA, primAttrLayout);
         courseDescrLayout.setClassName("course-descr-layout");
         courseDescrLayout.setAlignItems(Alignment.CENTER);
 
         attributeLayout = new VerticalLayout();
         attributeLayout.setClassName("attribute-layout");
-        attributeLayout.setJustifyContentMode(JustifyContentMode.BETWEEN);
+        attributeLayout.setJustifyContentMode(JustifyContentMode.START);
         attributeLayout.setAlignItems(Alignment.START);
+
+        attributeSubLayout = new VerticalLayout();
+        attributeSubLayout.setClassName("attrubute-sublayout");
+        attributeSubLayout.setJustifyContentMode(JustifyContentMode.START);
+        attributeSubLayout.setAlignItems(Alignment.START);
 
         attributeLabel = new Label("Other attributes: ");
         attributeLabel.setClassName("attribute-label");
-        attributeLayout.add(attributeLabel);
+        attributeSubLayout.add(attributeLabel);
 
-        //hiding already known attributes
-        Map<Integer, String> etcAttrs = new HashMap<>(mappedObj);
-        for (int i = -1; i <= 6; i++) {
-            etcAttrs.remove(i);
+        for (ObjAttr objAttr: obj.getObjAttrs()) {
+            if (objAttr.getAttribute().getAttrId() > AttributeTool.PRIMARY_ATTRIBUTE_ID_SPACE) {
+                attributeSubLayout.add(new Label(objAttr.getAttribute().getAttrName() + ": " +
+                        objAttr.getValue()));
+            }
         }
 
-        for (Map.Entry<Integer, String> attr: etcAttrs.entrySet()) {
-            attributeLayout.add(new Label("Attribute id: " + attr.getKey() + ", attribute value: " + attr.getValue()));
+//        for (Map.Entry<Integer, String> attr: etcAttrs.entrySet()) {
+//            attributeSubLayout.add(new Label("Attribute id: " + attr.getKey() + ", attribute value: " + attr.getValue()));
+//        }
+
+        scroller = new Scroller(attributeSubLayout);
+        scroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
+        scroller.addClassName("scroller");
+        attributeLayout.add(scroller);
+
+        if (userAuthentication != null && userAuthentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MODERATOR"))) {
+            attributeManagementLabel = new Label("Manage attributes");
+            attributeManagementMenu = new MenuBar();
+            MenuItem menuItem = attributeManagementMenu.addItem(attributeManagementLabel);
+            SubMenu subMenu = menuItem.getSubMenu();
+
+            ComponentEventListener<ClickEvent<MenuItem>> attrDeleteListener = click -> {
+                Dialog dialog = new Dialog();
+
+                DeleteAttributePanel deleteAttributePanel = new DeleteAttributePanel(controllerInterface, obj, dialog);
+                dialog.setModal(false);
+                dialog.setDraggable(true);
+
+                dialog.add(deleteAttributePanel);
+                dialog.open();
+            };
+
+
+            ComponentEventListener<ClickEvent<MenuItem>> optionalAttrChangeListener = click -> {
+                Dialog dialog = new Dialog();
+
+                ChangeOptionalAttributePanel changeOptionalAttributePanel =
+                        new ChangeOptionalAttributePanel(controllerInterface, mappedObj, dialog);
+                dialog.setModal(false);
+                dialog.setDraggable(true);
+
+                dialog.add(changeOptionalAttributePanel);
+                dialog.open();
+            };
+
+            subMenu.addItem("Delete attribute", attrDeleteListener);
+            subMenu.addItem("Change optional attribute", optionalAttrChangeListener);
+            attributeLayout.add(attributeManagementMenu);
+
         }
-
-        addAttributeButton= new Button("Create attribute");
-        addAttributeButton.setClassName("course-button");
-        addAttributeButton.addClickListener(click -> {
-
-        });
-        attributeLayout.add(addAttributeButton);
-
         courseDataLayout = new HorizontalLayout(courseDescrLayout, attributeLayout);
         courseDataLayout.setClassName("course-data-layout");
         courseDataLayout.setJustifyContentMode(JustifyContentMode.EVENLY);
         courseDataLayout.setAlignItems(Alignment.STRETCH);
 
+        participantsLabel = new Label(mappedObj.get(AttrEnum.CURRENT_PARTICIPANTS.getValue()) + "/" +
+                mappedObj.get(AttrEnum.PARTICIPANTS_REQUIRED.getValue())+ " participants");
+
+
+
+
         joinCourseButton = new Button("Join course");
         joinCourseButton.setClassName("big-button");
         joinCourseButton.addClickListener(click -> {
-
+            addUserCourse(controllerInterface, mappedObj, mappedUser);
         });
 
-        this.add(nameHeader, creationInfoLayout, courseDataLayout, joinCourseButton);
+        cancelCourseButton = new Button("Cancel course");
+        cancelCourseButton.setClassName("big-button");
+        cancelCourseButton.addClickListener(click -> {
+            cancelUserCourse(controllerInterface, mappedObj, mappedUser);
+        });
+
+        participationLayout = new VerticalLayout(participantsLabel);
+        if (mappedUser.get(AttrEnum.USER_COURSES.getValue()).contains(mappedObj.get(AttrEnum.COURSE_NAME.getValue()))) {
+            participationLayout.add(cancelCourseButton);
+        }
+        else {
+            participationLayout.add(joinCourseButton);
+        }
+        participationLayout.setClassName("participation-layout");
+        participationLayout.setJustifyContentMode(JustifyContentMode.START);
+        participationLayout.setAlignItems(Alignment.CENTER);
+
+        this.add(headerInfoLayout, new Hr(), courseDataLayout, new Hr(),participationLayout);
 
     }
+
+    private void cancelUserCourse(MainControllerInterface controllerInterface, Map<Integer, String> mappedObj,
+                                  Map<Integer, String> mappedUser) {
+        String updatedParticipants = Integer.toString (Integer.parseInt(mappedObj.get(AttrEnum.CURRENT_PARTICIPANTS.getValue())) - 1);
+        String updatedUserCourses;
+        if (mappedUser.containsKey(AttrEnum.USER_COURSES.getValue())) {
+            updatedUserCourses = mappedUser.get(AttrEnum.USER_COURSES.getValue())
+                    .replace(mappedObj.get(AttrEnum.COURSE_NAME.getValue()) + ";", "");
+        }
+        else {
+            return;
+        }
+
+        Map<String, String> mappedObjAttr = AttributeTool.convertObjAttr("current participants",
+                updatedParticipants, ObjectConverter.getIdFromMappedObj(mappedObj));
+        controllerInterface.addUserCourse(mappedObjAttr);
+        Map<String, String> mappedUserCourses = AttributeTool.convertObjAttr("user courses",
+                updatedUserCourses, ObjectConverter.getIdFromMappedObj(mappedUser));
+        controllerInterface.addUserCourse(mappedUserCourses);
+
+        UI.getCurrent().getPage().reload();
+
+    }
+
+    private void addUserCourse(MainControllerInterface controllerInterface, Map<Integer, String> mappedObj,
+                          Map<Integer, String> mappedUser) {
+        String updatedParticipants = Integer.toString (Integer.parseInt(mappedObj.get(AttrEnum.CURRENT_PARTICIPANTS.getValue())) + 1);
+        Map<String, String> mappedObjAttr = AttributeTool.convertObjAttr("current participants",
+                updatedParticipants, ObjectConverter.getIdFromMappedObj(mappedObj));
+        controllerInterface.addUserCourse(mappedObjAttr);
+
+        String updatedUserCourses;
+        if (mappedUser.containsKey(AttrEnum.USER_COURSES.getValue())) {
+            updatedUserCourses = mappedUser.get(AttrEnum.USER_COURSES.getValue()) +
+                    mappedObj.get(AttrEnum.COURSE_NAME.getValue()) + ";";
+        }
+        else {
+            updatedUserCourses = mappedObj.get(AttrEnum.COURSE_NAME.getValue() )+ ";";
+        }
+        Map<String, String> mappedUserCourses = AttributeTool.convertObjAttr("user courses",
+                updatedUserCourses, ObjectConverter.getIdFromMappedObj(mappedUser));
+        controllerInterface.addUserCourse(mappedUserCourses);
+
+        UI.getCurrent().getPage().reload();
+    }
+
+
 
 }

@@ -48,7 +48,7 @@ public class CategoryCreationPanel extends FormLayout {
             courseAttrs.put(AttrEnum.CREATOR.getValue(), username);
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             Date date = new Date();
-            courseAttrs.put(AttrEnum.CREATION_DATE.getValue(), dateFormat.format(date));
+            courseAttrs.put(AttrEnum.START_DATE.getValue(), dateFormat.format(date));
 
             String rootCategoryId = VaadinSession.getCurrent().getAttribute("root category id").toString();
             if (rootCategoryId != null) {

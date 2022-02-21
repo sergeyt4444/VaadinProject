@@ -2,8 +2,11 @@ package com.project.views.components;
 
 import com.project.controller.MainControllerInterface;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Hr;
+import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.security.core.Authentication;
@@ -15,7 +18,6 @@ public class NavPanel extends VerticalLayout {
     private Button mainPageButton;
     private Button catPageButton;
     private Button recentCourcesButton;
-    private Button courseCalendarButton;
 
     private Button addCategoryButton;
     private Button addCourseButton;
@@ -38,12 +40,8 @@ public class NavPanel extends VerticalLayout {
         recentCourcesButton.addClickListener(click -> {
         });
         recentCourcesButton.setClassName("nav-button");
-        courseCalendarButton = new Button("Upcoming courses");
-        courseCalendarButton.addClickListener(click -> {
-        });
-        courseCalendarButton.setClassName("nav-button");
 
-        add(mainPageButton, catPageButton, recentCourcesButton, courseCalendarButton);
+        add(mainPageButton, catPageButton, recentCourcesButton);
 
         Authentication userAuthentication = SecurityContextHolder.getContext().getAuthentication();
         if (userAuthentication != null && userAuthentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
