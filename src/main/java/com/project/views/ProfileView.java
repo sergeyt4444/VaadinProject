@@ -33,7 +33,7 @@ public class ProfileView extends VerticalLayout {
 
         headerPanel = new HeaderPanel();
         navPanel = new NavPanel(controllerInterface);
-        profilePanel = new ProfilePanel();
+        profilePanel = new ProfilePanel(controllerInterface);
         horizontalLayout = new HorizontalLayout(navPanel, profilePanel);
         horizontalLayout.setMinHeight("700px");
         horizontalLayout.setAlignItems(Alignment.STRETCH);

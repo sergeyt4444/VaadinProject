@@ -155,11 +155,21 @@
     margin-top: 0px;
 }
 
+.full-profile-panel {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
 .profile-panel {
     background-color: #f0f0f0;
     min-width: 500px;
-    margin-right: 50%;
-    margin-left: 50%;
+    min-height: 650px;
+}
+
+.courses-info-layout {
+    background-color: #f0f0f0;
+    min-width: 900px;
+    min-height: 650px;
 }
 
 .profile-avatar {

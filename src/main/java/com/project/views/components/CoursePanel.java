@@ -27,6 +27,7 @@ import org.keycloak.KeycloakPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.Arrays;
 import java.util.Map;
 
 @CssImport("./styles/styles.css")
@@ -245,9 +246,7 @@ public class CoursePanel extends VerticalLayout {
         Map<String, String> mappedUserCourses = AttributeTool.convertObjAttr("user courses",
                 updatedUserCourses, ObjectConverter.getIdFromMappedObj(mappedUser));
         controllerInterface.addUserCourse(mappedUserCourses);
-
         UI.getCurrent().getPage().reload();
-
     }
 
     private void addUserCourse(MainControllerInterface controllerInterface, Map<Integer, String> mappedObj,
@@ -268,7 +267,6 @@ public class CoursePanel extends VerticalLayout {
         Map<String, String> mappedUserCourses = AttributeTool.convertObjAttr("user courses",
                 updatedUserCourses, ObjectConverter.getIdFromMappedObj(mappedUser));
         controllerInterface.addUserCourse(mappedUserCourses);
-
         UI.getCurrent().getPage().reload();
     }
 

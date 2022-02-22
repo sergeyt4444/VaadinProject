@@ -1,9 +1,7 @@
 package com.project.controller;
 
-import com.project.entity.Attribute;
-import com.project.entity.Obj;
-import com.project.entity.ObjAttr;
-import com.project.entity.ObjectTypeEnum;
+import com.project.entity.*;
+import com.project.tools.ObjectConverter;
 import com.sun.jersey.api.NotFoundException;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpStatus;
@@ -11,9 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @FeignClient(name = "spring-backend")
 @RestController
@@ -89,5 +85,9 @@ public interface MainControllerInterface {
     @PreAuthorize("hasRole('USER')")
     @PutMapping("api/usercourses")
     public ResponseEntity addUserCourse(@RequestBody Map<String, String> mappedObjAttr);
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("api/usercourses/{name}")
+    public ResponseEntity<List<Obj>> getUserCourses(@PathVariable (value = "name") String username);
 
 }
