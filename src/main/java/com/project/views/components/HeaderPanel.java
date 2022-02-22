@@ -27,8 +27,6 @@ public class HeaderPanel extends HorizontalLayout {
     private TextField searchBar;
     private Avatar userAvatar;
     private Label userLabel;
-    private Button profileButton;
-    private Button currentCoursesButton;
 
     private HorizontalLayout logoLayout;
     private HorizontalLayout userPanelLayout;
@@ -66,22 +64,8 @@ public class HeaderPanel extends HorizontalLayout {
         userLabel = new Label(username);
         userLabel.setClassName("user-label");
 
-
-//        profileButton = new Button("Профиль");
-//        profileButton.addClickListener(click -> {
-//            profileButton.getUI().ifPresent(ui -> {
-//                ui.navigate("vaadin_project/profile");
-//            });
-//        });
-//
-//        currentCoursesButton = new Button("Текущие курсы");
-//        currentCoursesButton.addClickListener(click -> {
-//        });
-
-
         MenuBar menuBar = new MenuBar();
         menuBar.setClassName("menu-bar");
-
 
         ComponentEventListener<ClickEvent<MenuItem>> logoutListener = click -> {
             getUI().get().getPage().setLocation("http://localhost:8180/auth/realms/myrealm/protocol/openid-connect/logout?redirect_uri=" +

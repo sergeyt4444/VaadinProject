@@ -87,12 +87,6 @@ public class ProfilePanel extends VerticalLayout {
         buttonLayout = new HorizontalLayout();
         buttonLayout.setClassName("profile-button-layout");
 
-//        lastCoursesButton = new Button("Latest courses");
-//        lastCoursesButton.addClassName("profile-button");
-//        lastCoursesButton.addClickListener(click -> {
-//
-//        });
-
         currentCoursesButton = new Button("Current courses");
         currentCoursesButton.addClassName("profile-button");
         currentCoursesButton.addClickListener(click -> {
@@ -101,7 +95,6 @@ public class ProfilePanel extends VerticalLayout {
 
         buttonLayout.add( currentCoursesButton);
         this.add(avatar, usernameField, roleField, givenNameField, familyNameField, emailField, phoneField, buttonLayout);
-
 
     }
 

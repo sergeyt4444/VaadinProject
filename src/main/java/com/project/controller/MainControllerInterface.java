@@ -71,8 +71,12 @@ public interface MainControllerInterface {
 
 
     @PreAuthorize("hasRole('MODERATOR')")
-    @PutMapping("/api/objattrs")
+    @PostMapping("/api/objattrs")
     public ResponseEntity createObjAttr(@RequestBody Map<String, String> mappedObjAttr);
+
+    @PreAuthorize("hasRole('MODERATOR')")
+    @PutMapping("/api/objattrs")
+    public ResponseEntity changeObjAttr(@RequestBody Map<String, String> mappedObjAttr);
 
     @PreAuthorize("hasRole('MODERATOR')")
     @DeleteMapping("api/objattrs/{id}")

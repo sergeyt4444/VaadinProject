@@ -33,21 +33,32 @@ public class DeleteAttributePanel extends FormLayout {
 
         submitButton = new Button("Delete attribute");
         submitButton.addClickListener(click -> {
-            Map<String, Boolean> response = controllerInterface.deleteObjAttr(mappedObj.get(select.getValue()));
-            if (response.get("deleted") == true) {
-                UI.getCurrent().getPage().reload();
-                Notification notification = new Notification("Attribute has been deleted");
-                notification.setPosition(Notification.Position.TOP_END);
-                notification.open();
-            }
-            else {
-                Notification notification = new Notification("Error");
+            if (select.getValue() == null) {
+                Notification notification = new Notification("Illegal attribute name");
                 notification.setPosition(Notification.Position.TOP_END);
                 notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
                 notification.open();
+            }
+            else {
+                Map<String, Boolean> response = controllerInterface.deleteObjAttr(mappedObj.get(select.getValue()));
+                if (response.get("deleted") == true) {
+                    UI.getCurrent().getPage().reload();
+                    Notification notification = new Notification("Attribute has been deleted");
+                    notification.setPosition(Notification.Position.TOP_END);
+                    notification.open();
+                }
+                else {
+                    Notification notification = new Notification("Error");
+                    notification.setPosition(Notification.Position.TOP_END);
+                    notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                    notification.open();
 
+                }
             }
         });
+        if (mappedObj.isEmpty()) {
+            submitButton.setEnabled(false);
+        }
 
         closeDialog = new Button("Exit");
         closeDialog.addClickListener(click -> {

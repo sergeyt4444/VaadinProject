@@ -27,7 +27,6 @@ import org.keycloak.KeycloakPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @CssImport("./styles/styles.css")
@@ -137,10 +136,6 @@ public class CoursePanel extends VerticalLayout {
             }
         }
 
-//        for (Map.Entry<Integer, String> attr: etcAttrs.entrySet()) {
-//            attributeSubLayout.add(new Label("Attribute id: " + attr.getKey() + ", attribute value: " + attr.getValue()));
-//        }
-
         scroller = new Scroller(attributeSubLayout);
         scroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
         scroller.addClassName("scroller");
@@ -164,11 +159,23 @@ public class CoursePanel extends VerticalLayout {
             };
 
 
+            ComponentEventListener<ClickEvent<MenuItem>> optionalAttrCreateListener = click -> {
+                Dialog dialog = new Dialog();
+
+                CreateOptionalAttributePanel changeOptionalAttributePanel =
+                        new CreateOptionalAttributePanel(controllerInterface, mappedObj, dialog);
+                dialog.setModal(false);
+                dialog.setDraggable(true);
+
+                dialog.add(changeOptionalAttributePanel);
+                dialog.open();
+            };
+
             ComponentEventListener<ClickEvent<MenuItem>> optionalAttrChangeListener = click -> {
                 Dialog dialog = new Dialog();
 
                 ChangeOptionalAttributePanel changeOptionalAttributePanel =
-                        new ChangeOptionalAttributePanel(controllerInterface, mappedObj, dialog);
+                        new ChangeOptionalAttributePanel(controllerInterface, obj, dialog);
                 dialog.setModal(false);
                 dialog.setDraggable(true);
 
@@ -177,6 +184,7 @@ public class CoursePanel extends VerticalLayout {
             };
 
             subMenu.addItem("Delete attribute", attrDeleteListener);
+            subMenu.addItem("Create optional attribute", optionalAttrCreateListener);
             subMenu.addItem("Change optional attribute", optionalAttrChangeListener);
             attributeLayout.add(attributeManagementMenu);
 

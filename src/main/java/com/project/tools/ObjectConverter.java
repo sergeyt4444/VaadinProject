@@ -27,8 +27,6 @@ public class ObjectConverter {
     }
 
     public static Map<String, Integer> convertObjectToEtcAttrNames(Obj obj) {
-        //Выглядит странно, но у объекта через фронтенд нельзя сделать два одноименных атрибута
-        // и нам нужна именно связь attrName -> objAttrId
         Map<String, Integer> result = new HashMap<>();
         for(ObjAttr objAttr: obj.getObjAttrs()) {
             if (objAttr.getAttribute().getAttrId() > AttributeTool.PRIMARY_ATTRIBUTE_ID_SPACE) {
