@@ -1,6 +1,9 @@
 package com.project.views.components;
 
 import com.project.controller.MainControllerInterface;
+import com.project.entity.AttrEnum;
+import com.vaadin.flow.component.ComponentUtil;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
@@ -12,6 +15,8 @@ import com.vaadin.flow.server.VaadinSession;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.Map;
+
 
 public class NavPanel extends VerticalLayout {
 
@@ -21,6 +26,7 @@ public class NavPanel extends VerticalLayout {
 
     private Button addCategoryButton;
     private Button addCourseButton;
+    private Button manageAttributesButton;
 
     public NavPanel(MainControllerInterface controllerInterface) {
         this.setClassName("nav-panel");
@@ -76,6 +82,24 @@ public class NavPanel extends VerticalLayout {
                 addCourseButton.setClassName("nav-button-admin");
                 add(addCourseButton);
             }
+
+        }
+    }
+
+    public void addAttributeManagementButton(MainControllerInterface controllerInterface) {
+        Map<Integer, String> mappedCourse = (Map<Integer, String>) ComponentUtil.getData(UI.getCurrent(), "course");
+        if (mappedCourse != null) {
+            manageAttributesButton = new Button("Manage course");
+            manageAttributesButton.addClickListener(click -> {
+                Dialog dialog = new Dialog();
+                CourseManagementPanel courseManagementPanel = new CourseManagementPanel(controllerInterface, dialog);
+                dialog.setModal(false);
+                dialog.setDraggable(true);
+                dialog.add(courseManagementPanel);
+                dialog.open();
+            });
+            manageAttributesButton.setClassName("nav-button-admin");
+            add(manageAttributesButton);
         }
     }
 

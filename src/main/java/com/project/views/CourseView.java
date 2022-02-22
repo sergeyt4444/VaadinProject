@@ -39,7 +39,6 @@ public class CourseView extends VerticalLayout implements BeforeEnterObserver {
 
         UI.getCurrent().getSession().setAttribute("root category id", "0");
         headerPanel = new HeaderPanel();
-        navPanel = new NavPanel(controllerInterface);
 
         this.setSizeFull();
         footerLayout = new FlexLayout();
@@ -66,6 +65,8 @@ public class CourseView extends VerticalLayout implements BeforeEnterObserver {
         else {
 
             coursePanel = new CoursePanel(controllerInterface, course);
+            navPanel = new NavPanel(controllerInterface);
+            navPanel.addAttributeManagementButton(controllerInterface);
             horizontalLayout = new HorizontalLayout(navPanel, coursePanel);
             horizontalLayout.setHeight("100%");
             horizontalLayout.setMinHeight("700px");

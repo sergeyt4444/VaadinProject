@@ -58,6 +58,10 @@ public interface MainControllerInterface {
     public ResponseEntity createCourse(@RequestBody Map<Integer, String> mappedObj);
 
     @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/api/courses")
+    public ResponseEntity editCourse(@RequestBody List<Map<String, String>> mappedObjAttrs);
+
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/api/attributes")
     public ResponseEntity<List<Attribute>> getAttributes();
 

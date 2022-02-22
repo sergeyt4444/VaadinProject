@@ -14,7 +14,7 @@ public class AttributeTool {
             Arrays.asList("In-person", "Remote"));
 
     public static final List<String> REQ_ATTRIBUTES = Collections.unmodifiableList(
-            Arrays.asList("course name", "course description", "parent id", "creator", "start date", "difficulty",
+            Arrays.asList("", "course name", "course description", "parent id", "", "creator", "start date", "difficulty",
                     "language", "format", "participants required", "current participants"));
 
     public static final int PRIMARY_ATTRIBUTE_ID_SPACE = 11;

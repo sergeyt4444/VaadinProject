@@ -8,6 +8,7 @@ import com.project.tools.AttributeTool;
 import com.project.tools.ObjectConverter;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.contextmenu.MenuItem;
@@ -63,6 +64,7 @@ public class CoursePanel extends VerticalLayout {
         this.addClassName("course-panel");
 
         Map<Integer, String> mappedObj = ObjectConverter.convertObject(obj);
+        ComponentUtil.setData(UI.getCurrent(), "course", mappedObj);
 
         Authentication userAuthentication = SecurityContextHolder.getContext().getAuthentication();
         KeycloakPrincipal principal = ((KeycloakPrincipal) userAuthentication.getPrincipal());
