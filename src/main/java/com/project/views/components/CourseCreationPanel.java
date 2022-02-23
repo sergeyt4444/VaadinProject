@@ -29,8 +29,8 @@ import java.util.Map;
 
 public class CourseCreationPanel extends CourseManipulationPanel {
 
-    Button submitCourse;
-    Button closeDialog;
+    private Button submitCourse;
+    private Button closeDialog;
 
     public CourseCreationPanel(MainControllerInterface controllerInterface, Dialog dialog) {
         this.setClassName("course-creation-panel");

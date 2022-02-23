@@ -3,6 +3,7 @@ package com.project.views;
 import com.project.controller.MainControllerInterface;
 import com.project.entity.AttrEnum;
 import com.project.entity.Obj;
+import com.project.tools.AttributeTool;
 import com.project.tools.ObjectConverter;
 import com.project.views.components.CategoryPanel;
 import com.project.views.components.HeaderPanel;
@@ -62,15 +63,36 @@ public class CategoryView extends VerticalLayout implements HasUrlParameter<Stri
     public void setParameter (BeforeEvent event, String parameter){
         categoryName = parameter;
 
+        Location location = event.getLocation();
+        QueryParameters queryParameters = location.getQueryParameters();
+        Map<String, List<String>> queryParamList = queryParameters.getParameters();
+
         Obj rootObj = controllerInterface.getCategoryByName(categoryName).getBody();
         Map<Integer, String> mappedRootObj = ObjectConverter.convertObject(rootObj);
 
         List<Obj> subcategoriesObj = controllerInterface.getSubCategories(ObjectConverter.getIdFromMappedObj(mappedRootObj)).getBody();
         List<Map<Integer, String>> mappedSubcategories = ObjectConverter.convertListOfObjects(subcategoriesObj);
 
-        List<Obj> coursesObj = controllerInterface.getCourses(ObjectConverter.getIdFromMappedObj(mappedRootObj)).getBody();
-        List<Map<Integer, String>> mappedCourses = ObjectConverter.convertListOfObjects(coursesObj);
+        List<Obj> coursesObj;
 
+        if (queryParamList.containsKey("difficulty") || queryParamList.containsKey("language") || queryParamList.containsKey("format")) {
+            if (!queryParamList.containsKey("difficulty")) {
+                queryParamList.put("difficulty", AttributeTool.getDifficulties());
+            }
+            if (!queryParamList.containsKey("language")) {
+                queryParamList.put("language", AttributeTool.getLanguages());
+            }
+            if (!queryParamList.containsKey("format")) {
+                queryParamList.put("format", AttributeTool.getFormats());
+            }
+            coursesObj = controllerInterface.getFilteredCourses(ObjectConverter.getIdFromMappedObj(mappedRootObj),
+                    queryParamList.get("difficulty"), queryParamList.get("language"), queryParamList.get("format")).getBody();
+        }
+        else {
+            coursesObj = controllerInterface.getCourses(ObjectConverter.getIdFromMappedObj(mappedRootObj)).getBody();
+        }
+
+        List<Map<Integer, String>> mappedCourses = ObjectConverter.convertListOfObjects(coursesObj);
         UI.getCurrent().getSession().setAttribute("root category id", ObjectConverter.getIdFromMappedObj(mappedRootObj));
 
         navPanel = new NavPanel(controllerInterface);

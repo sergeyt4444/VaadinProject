@@ -24,8 +24,8 @@ import java.util.Map;
 
 public class CourseManagementPanel extends CourseManipulationPanel {
 
-    Button submitAttributes;
-    Button closeDialog;
+    private Button submitAttributes;
+    private Button closeDialog;
 
     public CourseManagementPanel(MainControllerInterface controllerInterface, Dialog dialog) {
         Map<Integer, String> mappedCourse = (Map<Integer, String>) ComponentUtil.getData(UI.getCurrent(), "course");

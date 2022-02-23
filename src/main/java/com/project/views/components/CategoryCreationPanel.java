@@ -24,10 +24,10 @@ import java.util.*;
 @CssImport("./styles/styles.css")
 public class CategoryCreationPanel extends FormLayout {
 
-    TextField categoryNameField;
-    TextField categoryDescrField;
-    Button submitCategory;
-    Button closeDialog;
+    private TextField categoryNameField;
+    private TextField categoryDescrField;
+    private Button submitCategory;
+    private Button closeDialog;
 
     public CategoryCreationPanel(MainControllerInterface controllerInterface, Dialog dialog) {
         this.setClassName("course-creation-panel");

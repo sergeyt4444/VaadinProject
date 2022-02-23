@@ -49,6 +49,13 @@ public interface MainControllerInterface {
     @GetMapping("/api/courses/{pid}")
     public ResponseEntity<List<Obj>> getCourses(@PathVariable(value = "pid")Integer parentId);
 
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/api/filteredcourses/{pid}")
+    public ResponseEntity<List<Obj>> getFilteredCourses(@PathVariable(value = "pid")Integer parentId,
+                                                        @RequestParam List<String> difficulties,
+                                                        @RequestParam List<String> languages,
+                                                        @RequestParam List<String> formats);
+
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/api/categories")
     public ResponseEntity createCategory(@RequestBody Map<Integer, String> mappedObj);
@@ -68,7 +75,6 @@ public interface MainControllerInterface {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/api/attributes/{id}")
     public ResponseEntity<List<Attribute>> getAttributesByObjTypeId(@PathVariable(value = "id")Integer objTypeId);
-
 
     @PreAuthorize("hasRole('MODERATOR')")
     @PostMapping("/api/objattrs")
