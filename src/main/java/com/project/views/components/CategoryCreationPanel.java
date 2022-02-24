@@ -2,55 +2,53 @@ package com.project.views.components;
 
 import com.project.controller.MainControllerInterface;
 import com.project.entity.AttrEnum;
-import com.project.tools.AttributeTool;
 import com.project.tools.ObjectConverter;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
-import com.vaadin.flow.component.select.Select;
-import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.server.VaadinSession;
 import org.keycloak.KeycloakPrincipal;
-import org.keycloak.representations.IDToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-public class CourseCreationPanel extends CourseManipulationPanel {
 
-    private Button submitCourse;
+@CssImport("./styles/styles.css")
+public class CategoryCreationPanel extends FormLayout {
+
+    private TextField categoryNameField;
+    private TextField categoryDescrField;
+    private Button submitCategory;
     private Button closeDialog;
 
-    public CourseCreationPanel(MainControllerInterface controllerInterface, Dialog dialog) {
+    public CategoryCreationPanel(MainControllerInterface controllerInterface, Dialog dialog) {
         this.setClassName("course-creation-panel");
 
-        submitCourse = new Button("Create course");
-        submitCourse.addClassName("course-creation-button");
-        submitCourse.addClickListener(click -> {
+        categoryNameField = new TextField("Category name");
+        categoryNameField.addClassName("course-creation-tf");
+        categoryDescrField = new TextField("Category description");
+        categoryDescrField.addClassName("course-creation-tf");
+        submitCategory = new Button("Create category");
+        submitCategory.addClassName("course-creation-button");
+        submitCategory.addClickListener(click -> {
             Map<Integer, String> courseAttrs = new HashMap<>();
-            courseAttrs.put(AttrEnum.COURSE_NAME.getValue(), courseNameField.getValue());
-            courseAttrs.put(AttrEnum.COURSE_DESCRIPTION.getValue(), courseDescrField.getValue());
-            courseAttrs.put(AttrEnum.PARTICIPANTS_REQUIRED.getValue(), minParticipantsField.getValue().toString());
-            courseAttrs.put(AttrEnum.CURRENT_PARTICIPANTS.getValue(), "0");
-            courseAttrs.put(AttrEnum.DIFFICULTY.getValue(), difficultySelect.getValue());
-            courseAttrs.put(AttrEnum.LANGUAGE.getValue(), langSelect.getValue());
-            courseAttrs.put(AttrEnum.FORMAT.getValue(), formatSelect.getValue());
-            courseAttrs.put(AttrEnum.START_DATE.getValue(), startDateDPicker.getValue().toString());
+            courseAttrs.put(AttrEnum.COURSE_NAME.getValue(), categoryNameField.getValue());
+            courseAttrs.put(AttrEnum.COURSE_DESCRIPTION.getValue(), categoryDescrField.getValue());
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             KeycloakPrincipal principal = ((KeycloakPrincipal) authentication.getPrincipal());
-            String username = principal.getKeycloakSecurityContext().getToken().getGivenName();
+            String username = principal.getKeycloakSecurityContext().getToken().getPreferredUsername();
             courseAttrs.put(AttrEnum.CREATOR.getValue(), username);
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            Date date = new Date();
+            courseAttrs.put(AttrEnum.START_DATE.getValue(), dateFormat.format(date));
 
             String rootCategoryId = VaadinSession.getCurrent().getAttribute("root category id").toString();
             if (rootCategoryId != null) {
@@ -61,9 +59,9 @@ public class CourseCreationPanel extends CourseManipulationPanel {
             }
 
             if (ObjectConverter.validateMappedObject(courseAttrs)) {
-                controllerInterface.createCourse(courseAttrs);
+                controllerInterface.createCategory(courseAttrs);
                 UI.getCurrent().getPage().reload();
-                Notification notification = new Notification("Course has been created");
+                Notification notification = new Notification("Category has been created");
                 notification.setPosition(Notification.Position.TOP_END);
                 notification.open();
             }
@@ -81,8 +79,10 @@ public class CourseCreationPanel extends CourseManipulationPanel {
             dialog.close();
         });
 
-        this.setColspan(submitCourse,3);
-        this.setColspan(closeDialog,3);
-        add(submitCourse, closeDialog);
+        this.setResponsiveSteps(new ResponsiveStep("0", 2));
+        this.setColspan(categoryNameField, 2);
+        this.setColspan(categoryDescrField, 2);
+        add(categoryNameField, categoryDescrField, submitCategory, closeDialog);
     }
+
 }

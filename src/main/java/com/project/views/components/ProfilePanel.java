@@ -1,19 +1,31 @@
 package com.project.views.components;
 
+import com.project.controller.MainControllerInterface;
+import com.project.entity.AttrEnum;
+import com.project.entity.Obj;
+import com.project.tools.ObjectConverter;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.router.QueryParameters;
 import org.keycloak.KeycloakPrincipal;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.keycloak.representations.IDToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class ProfilePanel extends VerticalLayout {
+public class ProfilePanel extends HorizontalLayout {
 
     private Avatar avatar;
     private TextField usernameField;
@@ -22,15 +34,16 @@ public class ProfilePanel extends VerticalLayout {
     private TextField familyNameField;
     private TextField emailField;
     private TextField phoneField;
-    private HorizontalLayout buttonLayout;
-    private Button lastCoursesButton;
-    private Button currentCoursesButton;
+    private VerticalLayout userInfoLayout;
+    private H2 currentCoursesHeader;
+    private Grid<Map<Integer, String>> coursesGrid;
+    private VerticalLayout coursesInfoLayout;
 
-    public ProfilePanel() {
+    public ProfilePanel(MainControllerInterface controllerInterface) {
 
-        this.setAlignItems(Alignment.CENTER);
-        this.setJustifyContentMode(JustifyContentMode.START);
-        this.addClassName("profile-panel");
+        this.setAlignItems(Alignment.START);
+        this.setJustifyContentMode(JustifyContentMode.CENTER);
+        this.addClassName("full-profile-panel");
 
         KeycloakAuthenticationToken authentication = (KeycloakAuthenticationToken)  SecurityContextHolder.getContext().getAuthentication();
         KeycloakPrincipal principal = ((KeycloakPrincipal) authentication.getPrincipal());
@@ -54,22 +67,22 @@ public class ProfilePanel extends VerticalLayout {
         avatar = new Avatar(username);
         avatar.setClassName("profile-avatar");
 
-        usernameField = new TextField("Логин: ");
+        usernameField = new TextField("Username: ");
         usernameField.setValue(username);
         usernameField.setClassName("profile-tf");
         usernameField.setReadOnly(true);
 
-        roleField = new TextField("Уровень доступа: ");
+        roleField = new TextField("Access level: ");
         roleField.setValue(getUserRole(authentication));
         roleField.setClassName("profile-tf");
         roleField.setReadOnly(true);
 
-        givenNameField = new TextField("Имя: ");
+        givenNameField = new TextField("Given name: ");
         givenNameField.setValue(gname);
         givenNameField.setClassName("profile-tf");
         givenNameField.setReadOnly(true);
 
-        familyNameField = new TextField("Фамилия: ");
+        familyNameField = new TextField("Family name: ");
         familyNameField.setValue(fname);
         familyNameField.setClassName("profile-tf");
         familyNameField.setReadOnly(true);
@@ -79,39 +92,69 @@ public class ProfilePanel extends VerticalLayout {
         emailField.setClassName("profile-tf");
         emailField.setReadOnly(true);
 
-        phoneField = new TextField("Телефон: ");
+        phoneField = new TextField("Phone: ");
         phoneField.setValue(phone);
         phoneField.setClassName("profile-tf");
         phoneField.setReadOnly(true);
 
-        buttonLayout = new HorizontalLayout();
-        buttonLayout.setClassName("profile-button-layout");
+        userInfoLayout = new VerticalLayout();
+        userInfoLayout.setAlignItems(Alignment.CENTER);
+        userInfoLayout.setJustifyContentMode(JustifyContentMode.START);
+        userInfoLayout.addClassName("profile-panel");
+        userInfoLayout.add(avatar, usernameField, roleField, givenNameField, familyNameField, emailField, phoneField);
 
-        lastCoursesButton = new Button("Последние курсы");
-        lastCoursesButton.addClassName("profile-button");
-        lastCoursesButton.addClickListener(click -> {
+        currentCoursesHeader = new H2("Current courses");
 
-        });
+        List<Obj> courses = controllerInterface.getUserCourses(username).getBody();
+        List<Map<Integer, String>> mappedCourses = ObjectConverter.convertListOfObjects(courses);
 
-        currentCoursesButton = new Button("Текущие курсы");
-        currentCoursesButton.addClassName("profile-button");
-        currentCoursesButton.addClickListener(click -> {
+        coursesGrid = new Grid<>();
+        coursesGrid.setItems(mappedCourses);
 
-        });
+        coursesGrid.addColumn(map -> ObjectConverter.getIdFromMappedObj(map)).setHeader("Id")
+                .setAutoWidth(true).setFlexGrow(0).setSortable(true);
+        coursesGrid.addColumn(map -> map.get(AttrEnum.COURSE_NAME.getValue())).setHeader("Course name")
+                .setResizable(true).setWidth("200px").setSortable(true);
+        coursesGrid.addColumn(map -> map.get(AttrEnum.COURSE_DESCRIPTION.getValue())).setHeader("Course description")
+                .setResizable(true).setWidth("275px");
+        coursesGrid.addColumn(map -> map.get(AttrEnum.START_DATE.getValue())).setHeader("Starts on")
+                .setAutoWidth(true).setFlexGrow(0).setSortable(true);
+        coursesGrid.addColumn(map -> (map.get(AttrEnum.CURRENT_PARTICIPANTS.getValue()) + "/" +
+                map.get(AttrEnum.PARTICIPANTS_REQUIRED.getValue()))).setHeader("Participants")
+                .setAutoWidth(true).setFlexGrow(0).setSortable(true);
 
-        buttonLayout.add(lastCoursesButton, currentCoursesButton);
-        this.add(avatar, usernameField, roleField, givenNameField, familyNameField, emailField, phoneField, buttonLayout);
+        coursesGrid.addComponentColumn(map ->{
+            Icon icon = new Icon("arrow-forward");
+            Button goToCourse = new Button(icon);
+            goToCourse.addClickListener(click -> {
+                getUI().ifPresent(ui -> {
+                    Map<String, String> parameters = new HashMap<>();
+                    parameters.put("id", Integer.toString(ObjectConverter.getIdFromMappedObj(map)));
+                    ui.navigate("vaadin_project/course", QueryParameters.simple(parameters));
+                });
+            });
+            return goToCourse;
+        }).setHeader("Go to").setAutoWidth(true).setFlexGrow(0);
 
+        coursesGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+
+        coursesInfoLayout = new VerticalLayout();
+        coursesInfoLayout.setAlignItems(Alignment.CENTER);
+        coursesInfoLayout.setJustifyContentMode(JustifyContentMode.START);
+        coursesInfoLayout.addClassName("courses-info-layout");
+        coursesInfoLayout.add(currentCoursesHeader, coursesGrid);
+
+        this.add(userInfoLayout, coursesInfoLayout);
 
     }
 
     private String getUserRole(Authentication authentication) {
         if (authentication != null ) {
             if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
-                return "Администратор";
+                return "Administrator";
             }
             else {
-                return "Пользователь";
+                return "User";
             }
         }
         return "";

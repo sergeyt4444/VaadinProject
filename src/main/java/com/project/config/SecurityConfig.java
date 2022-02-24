@@ -50,7 +50,7 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
         http.csrf().disable();
         http
                 .logout()
-                .logoutUrl("/sso/logout").permitAll()
-                .logoutSuccessUrl("/vaadin_project/login");
+                .logoutUrl("https://localhost:8180/auth/realms/myrealm/protocol/openid-connect/logout").permitAll()
+                .logoutSuccessUrl("/sso/login");
     }
 }
