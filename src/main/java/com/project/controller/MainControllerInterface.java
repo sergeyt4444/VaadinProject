@@ -3,6 +3,7 @@ package com.project.controller;
 import com.project.entity.*;
 import com.project.tools.ObjectConverter;
 import com.sun.jersey.api.NotFoundException;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,14 +48,29 @@ public interface MainControllerInterface {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/api/courses/{pid}")
-    public ResponseEntity<List<Obj>> getCourses(@PathVariable(value = "pid")Integer parentId);
+    public ResponseEntity<List<Obj>> getCourses(@PathVariable(value = "pid")Integer parentId,
+                                                @RequestParam(defaultValue = "1") Integer page,
+                                                @RequestParam(defaultValue = "10") Integer pageSize);
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/api/filteredcourses/{pid}")
     public ResponseEntity<List<Obj>> getFilteredCourses(@PathVariable(value = "pid")Integer parentId,
                                                         @RequestParam List<String> difficulties,
                                                         @RequestParam List<String> languages,
-                                                        @RequestParam List<String> formats);
+                                                        @RequestParam List<String> formats,
+                                                        @RequestParam(defaultValue = "1") Integer page,
+                                                        @RequestParam(defaultValue = "10") Integer pageSize);
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("api/courses_count/{pid}")
+    public ResponseEntity<Integer> getCoursesCount(@PathVariable(value = "pid")Integer parentId);
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("api/filteredcourses_count/{pid}")
+    public ResponseEntity<Integer> getFilteredCoursesCount(@PathVariable(value = "pid")Integer parentId,
+                                                           @RequestParam List<String> difficulties,
+                                                           @RequestParam List<String> languages,
+                                                           @RequestParam List<String> formats);
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/api/categories")
@@ -98,6 +114,22 @@ public interface MainControllerInterface {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("api/usercourses/{name}")
-    public ResponseEntity<List<Obj>> getUserCourses(@PathVariable (value = "name") String username);
+    public ResponseEntity<List<Obj>> getUserCourses(@PathVariable (value = "name") String username,
+                                                    @RequestParam(defaultValue = "1") Integer page,
+                                                    @RequestParam(defaultValue = "10") Integer pageSize);
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("api/usercourses/{name}/count")
+    public ResponseEntity<Integer> getUserCoursesCount(@PathVariable (value = "name") String username);
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("api/latest_courses")
+    public ResponseEntity<List<Obj>> getLatestCourses(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer pageSize);
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("api/courses_count")
+    public ResponseEntity<Integer> getCoursesCount();
 
 }

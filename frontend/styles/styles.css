@@ -68,11 +68,14 @@
     grid-template-columns: 1fr 1fr 1fr 1fr;
     margin-left: 100px;
     padding: 30px;
-    min-width: 90%;
+    min-width: 80%;
+    min-height: 60%;
     overflow-y: auto;
 }
 
-
+.page-nav-layout {
+    min-width: 91%;
+}
 
 .logo-image {
     height: 100px;
@@ -267,4 +270,30 @@
 
 .course-filter-details {;
     min-width: 1000px;
+}
+
+.filter-element {
+    margin-left: 600px;
+}
+
+.latest-courses-panel {
+    min-width: 900px;
+    margin-left: 25%;
+    margin-right: 25%;
+}
+
+.latest-courses-grid {
+    min-height: 587px;
+}
+
+.latest-courses-header {
+    margin-top: 18px;
+}
+
+.user-courses-grid {
+    min-height: 475px;
+}
+
+.goto-button {
+    max-height: 24px;
 }

@@ -199,9 +199,7 @@ public class CoursePanel extends VerticalLayout {
 
         participantsLabel = new Label(mappedObj.get(AttrEnum.CURRENT_PARTICIPANTS.getValue()) + "/" +
                 mappedObj.get(AttrEnum.PARTICIPANTS_REQUIRED.getValue())+ " participants");
-
-
-
+        
 
         joinCourseButton = new Button("Join course");
         joinCourseButton.setClassName("big-button");
@@ -216,7 +214,7 @@ public class CoursePanel extends VerticalLayout {
         });
 
         participationLayout = new VerticalLayout(participantsLabel);
-        if (mappedUser.get(AttrEnum.USER_COURSES.getValue()).contains(mappedObj.get(AttrEnum.COURSE_NAME.getValue()))) {
+        if (mappedUser.get(AttrEnum.USER_COURSES.getValue()).contains(Integer.toString(ObjectConverter.getIdFromMappedObj(mappedObj)) +";")) {
             participationLayout.add(cancelCourseButton);
         }
         else {
@@ -236,7 +234,7 @@ public class CoursePanel extends VerticalLayout {
         String updatedUserCourses;
         if (mappedUser.containsKey(AttrEnum.USER_COURSES.getValue())) {
             updatedUserCourses = mappedUser.get(AttrEnum.USER_COURSES.getValue())
-                    .replace(mappedObj.get(AttrEnum.COURSE_NAME.getValue()) + ";", "");
+                    .replace(Integer.toString(ObjectConverter.getIdFromMappedObj(mappedObj)) + ";", "");
         }
         else {
             return;
@@ -261,14 +259,15 @@ public class CoursePanel extends VerticalLayout {
         String updatedUserCourses;
         if (mappedUser.containsKey(AttrEnum.USER_COURSES.getValue())) {
             updatedUserCourses = mappedUser.get(AttrEnum.USER_COURSES.getValue()) +
-                    mappedObj.get(AttrEnum.COURSE_NAME.getValue()) + ";";
+                    Integer.toString(ObjectConverter.getIdFromMappedObj(mappedObj)) + ";";
         }
         else {
-            updatedUserCourses = mappedObj.get(AttrEnum.COURSE_NAME.getValue() )+ ";";
+            updatedUserCourses = mappedObj.get(Integer.toString(ObjectConverter.getIdFromMappedObj(mappedObj)))+ ";";
         }
         Map<String, String> mappedUserCourses = AttributeTool.convertObjAttr("user courses",
                 updatedUserCourses, ObjectConverter.getIdFromMappedObj(mappedUser));
         controllerInterface.addUserCourse(mappedUserCourses);
+
         UI.getCurrent().getPage().reload();
     }
 
