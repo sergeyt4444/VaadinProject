@@ -1,7 +1,7 @@
 package com.project.views.components;
 
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.ComponentEventListener;
+import com.project.tools.ObjectConverter;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.contextmenu.MenuItem;
@@ -14,10 +14,16 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.server.StreamResource;
+import com.vaadin.flow.shared.Registration;
+import javafx.scene.input.KeyCode;
 import org.keycloak.KeycloakPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @CssImport("./styles/styles.css")
 public class HeaderPanel extends HorizontalLayout {
@@ -25,6 +31,7 @@ public class HeaderPanel extends HorizontalLayout {
     private Image logoImage;
     private Label logo;
     private TextField searchBar;
+    private Button searchButton;
     private Avatar userAvatar;
     private Label userLabel;
 
@@ -52,7 +59,20 @@ public class HeaderPanel extends HorizontalLayout {
         searchBar.setPlaceholder("Search");
         searchBar.setPrefixComponent(VaadinIcon.SEARCH.create());
         searchBar.setClassName("search-bar");
-
+        final Registration[] registration = new Registration[1];
+        searchBar.addFocusListener(textFieldFocusEvent -> {
+            registration[0] = Shortcuts.addShortcutListener(searchBar, () ->
+            {
+                getUI().ifPresent(ui -> {
+                    Map<String, String> parameters = new HashMap<>();
+                    parameters.put("query", searchBar.getValue());
+                    ui.navigate("vaadin_project/search", QueryParameters.simple(parameters));
+                });
+            }, Key.ENTER);
+        });
+        searchBar.addBlurListener(event -> {
+            registration[0].remove();
+        });
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         KeycloakPrincipal principal = ((KeycloakPrincipal) authentication.getPrincipal());

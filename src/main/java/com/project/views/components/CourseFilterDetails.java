@@ -12,11 +12,10 @@ import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.QueryParameters;
+import feign.template.UriUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 public class CourseFilterDetails extends HorizontalLayout {
 
@@ -88,7 +87,9 @@ public class CourseFilterDetails extends HorizontalLayout {
             getUI().ifPresent(ui -> {
                 Map<String, String[]> parameters = new HashMap<>();
                 parameters.put("difficulty", difficultyGroup.getSelectedItems().toArray(new String[0]));
-                parameters.put("language", languageGroup.getSelectedItems().toArray(new String[0]));
+                parameters.put("language",
+                        Arrays.stream(languageGroup.getSelectedItems().toArray(new String[0]))
+                                .map(lang -> UriUtils.encode(lang, StandardCharsets.UTF_8)).toArray(String[]::new));
                 parameters.put("format", formatGroup.getSelectedItems().toArray(new String[0]));
                 ui.navigate("vaadin_project/"+courseName, QueryParameters.full(parameters));
             });

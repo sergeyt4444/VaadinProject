@@ -20,23 +20,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LatestCoursesPanel extends VerticalLayout {
+public class SearchPanel extends VerticalLayout {
 
-    private H2 latestCoursesHeader;
+    private H2 searchHeader;
     private Grid<Map<Integer, String>> coursesGrid;
     private PageNavigationComponent pageNavigationComponent;
     public static final int PAGE_SIZE = 10;
 
-    public LatestCoursesPanel(MainControllerInterface controllerInterface, BeforeEvent event) {
+    public SearchPanel(MainControllerInterface controllerInterface, BeforeEvent event) {
 
         setAlignItems(FlexComponent.Alignment.CENTER);
         setJustifyContentMode(FlexComponent.JustifyContentMode.START);
-        addClassName("latest-courses-panel");
+        addClassName("search-panel");
 
         Location location = event.getLocation();
         QueryParameters queryParameters = location.getQueryParameters();
+        String searchQuery = "";
+        if (queryParameters.getParameters().containsKey("query")) {
+            searchQuery = queryParameters.getParameters().get("query").get(0);
+        }
         int currentPage = 1;
-        int pagesCount = (controllerInterface.getCoursesCount().getBody() - 1)/LatestCoursesPanel.PAGE_SIZE + 1;
+        int pagesCount = (controllerInterface.countSearchCourses(searchQuery).getBody() - 1)/LatestCoursesPanel.PAGE_SIZE + 1;
 
         if (queryParameters.getParameters().containsKey("page")) {
             currentPage = Integer.parseInt(queryParameters.getParameters().get("page").get(0));
@@ -44,6 +48,7 @@ public class LatestCoursesPanel extends VerticalLayout {
                 currentPage = 1;
                 Map<String, String> parameters = new HashMap<>();
                 parameters.put("page", "1");
+                parameters.put("query", searchQuery);
                 UI.getCurrent().navigate(location.getPath(), QueryParameters.simple(parameters));
 
             }
@@ -51,24 +56,26 @@ public class LatestCoursesPanel extends VerticalLayout {
                 currentPage = pagesCount;
                 Map<String, String> parameters = new HashMap<>();
                 parameters.put("page", Integer.toString(pagesCount));
+                parameters.put("query", searchQuery);
                 UI.getCurrent().navigate(location.getPath(), QueryParameters.simple(parameters));
             }
         }
 
-        latestCoursesHeader = new H2("Latest courses");
-        latestCoursesHeader.setClassName("latest-courses-header");
 
-        List<Obj> courses = controllerInterface.getLatestCourses(currentPage, PAGE_SIZE).getBody();
+        searchHeader = new H2("Search results");
+        searchHeader.setClassName("search-header");
+
+        List<Obj> courses = controllerInterface.searchCourses(searchQuery,currentPage, PAGE_SIZE).getBody();
         List<Map<Integer, String>> mappedCourses = ObjectConverter.convertListOfObjects(courses);
 
         coursesGrid = new Grid<>();
-        coursesGrid.setClassName("latest-courses-grid");
+        coursesGrid.setClassName("search-grid");
         coursesGrid.setItems(mappedCourses);
 
         coursesGrid.addColumn(map -> ObjectConverter.getIdFromMappedObj(map)).setHeader("Id")
                 .setAutoWidth(true).setFlexGrow(0);
         coursesGrid.addColumn(map -> map.get(AttrEnum.COURSE_NAME.getValue())).setHeader("Course name")
-                .setResizable(true).setWidth("100px");
+                .setResizable(true).setWidth("200px");
         coursesGrid.addColumn(map -> map.get(AttrEnum.COURSE_DESCRIPTION.getValue())).setHeader("Course description")
                 .setResizable(true).setWidth("275px");
         coursesGrid.addColumn(map -> map.get(AttrEnum.START_DATE.getValue())).setHeader("Starts on")
@@ -94,7 +101,7 @@ public class LatestCoursesPanel extends VerticalLayout {
 
         pageNavigationComponent = new PageNavigationComponent(currentPage, pagesCount, event);
 
-        add(latestCoursesHeader, coursesGrid, pageNavigationComponent);
+        add(searchHeader, coursesGrid, pageNavigationComponent);
 
     }
 

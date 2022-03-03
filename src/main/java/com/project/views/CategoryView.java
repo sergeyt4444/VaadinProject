@@ -1,5 +1,6 @@
 package com.project.views;
 
+import com.ctc.wstx.shaded.msv_core.util.Uri;
 import com.project.controller.MainControllerInterface;
 import com.project.entity.AttrEnum;
 import com.project.entity.Obj;
@@ -14,8 +15,13 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.VaadinSession;
+import feign.template.UriUtils;
 import org.springframework.security.access.annotation.Secured;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Route("vaadin_project")

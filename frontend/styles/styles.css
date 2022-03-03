@@ -45,12 +45,18 @@
 .course-name-label {
     font-size: 28px;
     background-color: #d8d8d8;
+    min-height: 52px;
+    max-width: 320px;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .course-description-label {
     font-size: 20px;
-    min-height: 52px;
+    min-height: 70px;
     max-width: 320px;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .main-panel {
@@ -269,17 +275,17 @@
 }
 
 .course-filter-details {;
-    min-width: 1000px;
+    min-width: 1420px;
 }
 
 .filter-element {
-    margin-left: 600px;
+    margin-left: 100px;
 }
 
 .latest-courses-panel {
-    min-width: 900px;
-    margin-left: 25%;
-    margin-right: 25%;
+    min-width: 1200px;
+    margin-left: 8%;
+    margin-right: 8%;
 }
 
 .latest-courses-grid {
@@ -296,4 +302,17 @@
 
 .goto-button {
     max-height: 24px;
+}
+.search-panel {
+    min-width: 1200px;
+    margin-left: 8%;
+    margin-right: 8%;
+}
+
+.search-grid {
+    min-height: 587px;
+}
+
+.search-header {
+    margin-top: 18px;
 }
