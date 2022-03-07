@@ -137,7 +137,7 @@ public class HeaderPanel extends HorizontalLayout {
                     notification.setPosition(Notification.Position.TOP_END);
                     notification.open();
                     Map<String, String> mappedUserCourses = AttributeTool.convertObjAttr("courses notified",
-                            mappedUser.get(AttrEnum.COURSES_NOTIFIED.getValue()) +
+                            notifiedCoursesString +
                                     ObjectConverter.getIdFromMappedObj(mappedCourse) + ";", ObjectConverter.getIdFromMappedObj(mappedUser));
                     controllerInterface.addUserCourse(mappedUserCourses);
                 }
