@@ -58,7 +58,7 @@ public class ProfileView extends VerticalLayout implements BeforeEnterObserver {
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
 
-        headerPanel = new HeaderPanel();
+        headerPanel = new HeaderPanel(controllerInterface);
         navPanel = new NavPanel(controllerInterface);
         profilePanel = new ProfilePanel(controllerInterface, beforeEnterEvent);
         horizontalLayout.removeAll();

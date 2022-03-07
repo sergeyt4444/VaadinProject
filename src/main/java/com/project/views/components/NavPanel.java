@@ -40,6 +40,9 @@ public class NavPanel extends VerticalLayout {
         mainPageButton.setClassName("nav-button");
         catPageButton = new Button("Categories");
         catPageButton.addClickListener(click -> {
+            catPageButton.getUI().ifPresent(ui -> {
+                ui.navigate("vaadin_project/categories");
+            });
         });
         catPageButton.setClassName("nav-button");
         recentCourcesButton = new Button("Latest courses");

@@ -41,7 +41,7 @@ public class CategoryView extends VerticalLayout implements HasUrlParameter<Stri
     public CategoryView(MainControllerInterface controllerInterface) {
 
         this.controllerInterface = controllerInterface;
-        headerPanel = new HeaderPanel();
+        headerPanel = new HeaderPanel(controllerInterface);
 
         horizontalLayout = new HorizontalLayout();
         horizontalLayout.setMinHeight("700px");

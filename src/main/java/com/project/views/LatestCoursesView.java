@@ -29,7 +29,7 @@ public class LatestCoursesView extends VerticalLayout implements BeforeEnterObse
     public LatestCoursesView(MainControllerInterface controllerInterface) {
 
         this.controllerInterface = controllerInterface;
-        headerPanel = new HeaderPanel();
+        headerPanel = new HeaderPanel(controllerInterface);
 
         UI.getCurrent().getSession().setAttribute("root category id", "0");
 

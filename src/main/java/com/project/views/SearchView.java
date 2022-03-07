@@ -30,7 +30,7 @@ public class SearchView extends VerticalLayout implements BeforeEnterObserver {
     public SearchView(MainControllerInterface controllerInterface) {
 
         this.controllerInterface = controllerInterface;
-        headerPanel = new HeaderPanel();
+        headerPanel = new HeaderPanel(controllerInterface);
 
         UI.getCurrent().getSession().setAttribute("root category id", "0");
 

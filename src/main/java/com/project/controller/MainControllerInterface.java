@@ -134,12 +134,16 @@ public interface MainControllerInterface {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/api/search")
-    public ResponseEntity<List<Obj>> searchCourses(@RequestParam String searchQuery,
+    public ResponseEntity<List<Map<Integer, String>>> searchCourses(@RequestParam String searchQuery,
                                                    @RequestParam(defaultValue = "1") Integer page,
                                                    @RequestParam(defaultValue = "10") Integer pageSize);
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/api/search_count")
     public ResponseEntity<Integer> countSearchCourses(@RequestParam String searchQuery);
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/api/categories")
+    public ResponseEntity<List<Obj>> getCategories();
 
 }

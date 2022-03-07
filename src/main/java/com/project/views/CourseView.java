@@ -17,6 +17,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 import java.util.Map;
@@ -38,7 +40,7 @@ public class CourseView extends VerticalLayout implements BeforeEnterObserver {
         this.setHeight("100%");
 
         UI.getCurrent().getSession().setAttribute("root category id", "0");
-        headerPanel = new HeaderPanel();
+        headerPanel = new HeaderPanel(controllerInterface);
 
         this.setSizeFull();
         footerLayout = new FlexLayout();
@@ -66,7 +68,10 @@ public class CourseView extends VerticalLayout implements BeforeEnterObserver {
 
             coursePanel = new CoursePanel(controllerInterface, course);
             navPanel = new NavPanel(controllerInterface);
-            navPanel.addAttributeManagementButton(controllerInterface);
+            Authentication userAuthentication = SecurityContextHolder.getContext().getAuthentication();
+            if (userAuthentication != null && userAuthentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MODERATOR"))) {
+                navPanel.addAttributeManagementButton(controllerInterface);
+            }
             horizontalLayout = new HorizontalLayout(navPanel, coursePanel);
             horizontalLayout.setHeight("100%");
             horizontalLayout.setMinHeight("700px");

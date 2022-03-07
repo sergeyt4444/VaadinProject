@@ -65,8 +65,7 @@ public class SearchPanel extends VerticalLayout {
         searchHeader = new H2("Search results");
         searchHeader.setClassName("search-header");
 
-        List<Obj> courses = controllerInterface.searchCourses(searchQuery,currentPage, PAGE_SIZE).getBody();
-        List<Map<Integer, String>> mappedCourses = ObjectConverter.convertListOfObjects(courses);
+        List<Map<Integer, String>> mappedCourses = controllerInterface.searchCourses(searchQuery,currentPage, PAGE_SIZE).getBody();
 
         coursesGrid = new Grid<>();
         coursesGrid.setClassName("search-grid");

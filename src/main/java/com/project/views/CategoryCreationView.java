@@ -24,7 +24,7 @@ public class CategoryCreationView extends VerticalLayout {
 
     public CategoryCreationView(MainControllerInterface controllerInterface) {
 
-        headerPanel = new HeaderPanel();
+        headerPanel = new HeaderPanel(controllerInterface);
         navPanel = new NavPanel(controllerInterface);
         courseCreationPanel = new CategoryCreationPanel(controllerInterface, null);
         horizontalLayout = new HorizontalLayout(navPanel, courseCreationPanel);

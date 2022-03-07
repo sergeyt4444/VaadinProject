@@ -316,3 +316,44 @@
 .search-header {
     margin-top: 18px;
 }
+
+.categories-scroller {
+    margin-left: 200px;
+    width: 60%;
+}
+
+.category-node-name-label {
+    padding-left: 20px;
+    min-width: 200px;
+    max-width: 200px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.category-node-descr-label {
+    padding-left: 20px;
+    min-width: 400px;
+    max-width: 400px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.category-content-layout {
+    padding: 4px 20px;
+    background-color: #f0f0f0;
+    min-width: 700px;
+    min-height: 34px;
+}
+
+.subcategories-layout {
+    background-color: #e4e4e4;
+}
+
+.subcategories-details {
+    margin-top: 4px;
+}
+
+.category-node {
+    background-color: #f8f8f8;
+    padding: 10px;
+}
