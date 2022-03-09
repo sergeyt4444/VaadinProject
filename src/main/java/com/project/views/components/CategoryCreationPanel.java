@@ -1,6 +1,7 @@
 package com.project.views.components;
 
-import com.project.controller.MainControllerInterface;
+import com.project.controller.AdminControllerInterface;
+import com.project.controller.UserControllerInterface;
 import com.project.entity.AttrEnum;
 import com.project.tools.ObjectConverter;
 import com.vaadin.flow.component.UI;
@@ -29,7 +30,8 @@ public class CategoryCreationPanel extends FormLayout {
     private Button submitCategory;
     private Button closeDialog;
 
-    public CategoryCreationPanel(MainControllerInterface controllerInterface, Dialog dialog) {
+    public CategoryCreationPanel(UserControllerInterface controllerInterface,
+                                 AdminControllerInterface adminControllerInterface, Dialog dialog) {
         this.setClassName("course-creation-panel");
 
         categoryNameField = new TextField("Category name");
@@ -59,7 +61,7 @@ public class CategoryCreationPanel extends FormLayout {
             }
 
             if (ObjectConverter.validateMappedObject(courseAttrs)) {
-                controllerInterface.createCategory(courseAttrs);
+                adminControllerInterface.createCategory(courseAttrs);
                 UI.getCurrent().getPage().reload();
                 Notification notification = new Notification("Category has been created");
                 notification.setPosition(Notification.Position.TOP_END);

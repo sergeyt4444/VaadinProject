@@ -1,6 +1,7 @@
 package com.project.views;
 
-import com.project.controller.MainControllerInterface;
+import com.project.controller.AdminControllerInterface;
+import com.project.controller.UserControllerInterface;
 import com.project.views.components.CategoryCreationPanel;
 import com.project.views.components.HeaderPanel;
 import com.project.views.components.NavPanel;
@@ -22,11 +23,11 @@ public class CategoryCreationView extends VerticalLayout {
     private CategoryCreationPanel courseCreationPanel;
     private HorizontalLayout horizontalLayout;
 
-    public CategoryCreationView(MainControllerInterface controllerInterface) {
+    public CategoryCreationView(UserControllerInterface controllerInterface, AdminControllerInterface adminControllerInterface) {
 
         headerPanel = new HeaderPanel(controllerInterface);
-        navPanel = new NavPanel(controllerInterface);
-        courseCreationPanel = new CategoryCreationPanel(controllerInterface, null);
+        navPanel = new NavPanel(controllerInterface, adminControllerInterface);
+        courseCreationPanel = new CategoryCreationPanel(controllerInterface, adminControllerInterface, null);
         horizontalLayout = new HorizontalLayout(navPanel, courseCreationPanel);
         horizontalLayout.setMinHeight("700px");
         horizontalLayout.setAlignItems(Alignment.STRETCH);

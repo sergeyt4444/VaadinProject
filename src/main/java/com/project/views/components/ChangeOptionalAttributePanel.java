@@ -1,8 +1,8 @@
 package com.project.views.components;
 
-import com.project.controller.MainControllerInterface;
+import com.project.controller.ModeratorControllerInterface;
+import com.project.controller.UserControllerInterface;
 import com.project.entity.Obj;
-import com.project.entity.ObjAttr;
 import com.project.tools.AttributeTool;
 import com.project.tools.ObjectConverter;
 import com.vaadin.flow.component.UI;
@@ -23,7 +23,8 @@ public class ChangeOptionalAttributePanel extends FormLayout {
     private Button submitButton;
     private Button closeDialog;
 
-    public ChangeOptionalAttributePanel(MainControllerInterface controllerInterface,
+    public ChangeOptionalAttributePanel(UserControllerInterface controllerInterface,
+                                        ModeratorControllerInterface moderatorControllerInterface,
                                         Obj obj, Dialog dialog) {
 
         Map<String, Integer> mappedObj = ObjectConverter.convertObjectToEtcAttrNames(obj);
@@ -46,7 +47,7 @@ public class ChangeOptionalAttributePanel extends FormLayout {
             else {
                 Map<String, String> mappedObjAttr = AttributeTool.convertObjAttr(select.getValue(),
                         attributeValueField.getValue(), obj.getObjId());
-                controllerInterface.changeObjAttr(mappedObjAttr);
+                moderatorControllerInterface.changeObjAttr(mappedObjAttr);
                 UI.getCurrent().getPage().reload();
                 Notification notification = new Notification("Attribute has been changed");
                 notification.setPosition(Notification.Position.TOP_END);

@@ -1,15 +1,12 @@
 package com.project.views.components;
 
-import com.project.controller.MainControllerInterface;
-import com.project.entity.AttrEnum;
+import com.project.controller.AdminControllerInterface;
+import com.project.controller.UserControllerInterface;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.contextmenu.MenuItem;
-import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Hr;
-import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.security.core.Authentication;
@@ -28,7 +25,7 @@ public class NavPanel extends VerticalLayout {
     private Button addCourseButton;
     private Button manageAttributesButton;
 
-    public NavPanel(MainControllerInterface controllerInterface) {
+    public NavPanel(UserControllerInterface controllerInterface, AdminControllerInterface adminControllerInterface) {
         this.setClassName("nav-panel");
 
         mainPageButton = new Button("Main page");
@@ -61,7 +58,7 @@ public class NavPanel extends VerticalLayout {
             addCategoryButton.addClickListener(click -> {
                 Dialog dialog = new Dialog();
 
-                CategoryCreationPanel categoryCreationPanel = new CategoryCreationPanel(controllerInterface, dialog);
+                CategoryCreationPanel categoryCreationPanel = new CategoryCreationPanel(controllerInterface, adminControllerInterface, dialog);
                 dialog.setModal(false);
                 dialog.setDraggable(true);
 
@@ -77,7 +74,7 @@ public class NavPanel extends VerticalLayout {
                 addCourseButton.addClickListener(click -> {
                     Dialog dialog = new Dialog();
 
-                    CourseCreationPanel courseCreationPanel = new CourseCreationPanel(controllerInterface, dialog);
+                    CourseCreationPanel courseCreationPanel = new CourseCreationPanel(controllerInterface, adminControllerInterface, dialog);
                     dialog.setModal(false);
                     dialog.setDraggable(true);
 
@@ -92,13 +89,13 @@ public class NavPanel extends VerticalLayout {
         }
     }
 
-    public void addAttributeManagementButton(MainControllerInterface controllerInterface) {
+    public void addAttributeManagementButton(UserControllerInterface controllerInterface, AdminControllerInterface adminControllerInterface) {
         Map<Integer, String> mappedCourse = (Map<Integer, String>) ComponentUtil.getData(UI.getCurrent(), "course");
         if (mappedCourse != null) {
             manageAttributesButton = new Button("Manage course");
             manageAttributesButton.addClickListener(click -> {
                 Dialog dialog = new Dialog();
-                CourseManagementPanel courseManagementPanel = new CourseManagementPanel(controllerInterface, dialog);
+                CourseManagementPanel courseManagementPanel = new CourseManagementPanel(controllerInterface, adminControllerInterface, dialog);
                 dialog.setModal(false);
                 dialog.setDraggable(true);
                 dialog.add(courseManagementPanel);

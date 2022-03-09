@@ -1,6 +1,6 @@
 package com.project.views.components;
 
-import com.project.controller.MainControllerInterface;
+import com.project.controller.UserControllerInterface;
 import com.project.entity.AttrEnum;
 import com.project.entity.Obj;
 import com.project.tools.AttributeTool;
@@ -11,7 +11,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -42,7 +41,7 @@ public class HeaderPanel extends HorizontalLayout {
     private HorizontalLayout logoLayout;
     private HorizontalLayout userPanelLayout;
 
-    public HeaderPanel(MainControllerInterface controllerInterface) {
+    public HeaderPanel(UserControllerInterface controllerInterface) {
         this.setClassName("header-panel");
 
         StreamResource imageResource = new StreamResource(
@@ -63,20 +62,17 @@ public class HeaderPanel extends HorizontalLayout {
         searchBar.setPlaceholder("Search");
         searchBar.setPrefixComponent(VaadinIcon.SEARCH.create());
         searchBar.setClassName("search-bar");
-        final Registration[] registration = new Registration[1];
-        searchBar.addFocusListener(textFieldFocusEvent -> {
-            registration[0] = Shortcuts.addShortcutListener(searchBar, () ->
-            {
-                getUI().ifPresent(ui -> {
-                    Map<String, String> parameters = new HashMap<>();
-                    parameters.put("query", searchBar.getValue());
-                    ui.navigate("vaadin_project/search", QueryParameters.simple(parameters));
-                });
-            }, Key.ENTER);
+
+        searchButton = new Button("Search");
+        searchButton.addClickListener(click ->
+        {
+            getUI().ifPresent(ui -> {
+                Map<String, String> parameters = new HashMap<>();
+                parameters.put("query", searchBar.getValue());
+                ui.navigate("vaadin_project/search", QueryParameters.simple(parameters));
+            });
         });
-        searchBar.addBlurListener(event -> {
-            registration[0].remove();
-        });
+        searchButton.setClassName("search-button");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         KeycloakPrincipal principal = ((KeycloakPrincipal) authentication.getPrincipal());
@@ -109,7 +105,7 @@ public class HeaderPanel extends HorizontalLayout {
         userPanelLayout.setAlignItems(Alignment.CENTER);
         userPanelLayout.setClassName("user-panel-layout");
 
-        add(logoLayout, searchBar, userPanelLayout);
+        add(logoLayout, searchBar, searchButton, userPanelLayout);
 
         this.setAlignItems(Alignment.CENTER);
         this.setJustifyContentMode(JustifyContentMode.BETWEEN);

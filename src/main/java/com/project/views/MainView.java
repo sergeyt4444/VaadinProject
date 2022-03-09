@@ -1,6 +1,7 @@
 package com.project.views;
 
-import com.project.controller.MainControllerInterface;
+import com.project.controller.AdminControllerInterface;
+import com.project.controller.UserControllerInterface;
 import com.project.entity.Obj;
 import com.project.tools.ObjectConverter;
 import com.project.views.components.HeaderPanel;
@@ -13,7 +14,6 @@ import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.VaadinSession;
 import org.springframework.security.access.annotation.Secured;
 
 import java.util.List;
@@ -29,13 +29,13 @@ public class MainView extends VerticalLayout {
     private CategoriesDiv mainPanel;
     private HorizontalLayout horizontalLayout;
 
-    public MainView(MainControllerInterface controllerInterface) {
+    public MainView(UserControllerInterface controllerInterface, AdminControllerInterface adminControllerInterface) {
 
         this.setHeight("100%");
 
         UI.getCurrent().getSession().setAttribute("root category id", "0");
         headerPanel = new HeaderPanel(controllerInterface);
-        navPanel = new NavPanel(controllerInterface);
+        navPanel = new NavPanel(controllerInterface, adminControllerInterface);
         List<Obj> objList = controllerInterface.getMainCategories().getBody();
         List<Map<Integer, String>> mappedObjList = ObjectConverter.convertListOfObjects(objList);
         mainPanel = new CategoriesDiv(mappedObjList);

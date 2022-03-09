@@ -1,8 +1,7 @@
 package com.project.views.components;
 
-import com.project.controller.MainControllerInterface;
+import com.project.controller.UserControllerInterface;
 import com.project.entity.AttrEnum;
-import com.project.entity.Obj;
 import com.project.tools.ObjectConverter;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -27,7 +26,7 @@ public class SearchPanel extends VerticalLayout {
     private PageNavigationComponent pageNavigationComponent;
     public static final int PAGE_SIZE = 10;
 
-    public SearchPanel(MainControllerInterface controllerInterface, BeforeEvent event) {
+    public SearchPanel(UserControllerInterface controllerInterface, BeforeEvent event) {
 
         setAlignItems(FlexComponent.Alignment.CENTER);
         setJustifyContentMode(FlexComponent.JustifyContentMode.START);

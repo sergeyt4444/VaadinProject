@@ -1,10 +1,10 @@
 package com.project.views;
 
-import com.project.controller.MainControllerInterface;
+import com.project.controller.AdminControllerInterface;
+import com.project.controller.UserControllerInterface;
 import com.project.entity.Obj;
 import com.project.tools.ObjectConverter;
 import com.project.views.components.AllCategoriesComponent;
-import com.project.views.components.CategoriesDiv;
 import com.project.views.components.HeaderPanel;
 import com.project.views.components.NavPanel;
 import com.vaadin.flow.component.UI;
@@ -27,13 +27,13 @@ public class CategoriesView extends VerticalLayout {
     private HorizontalLayout horizontalLayout;
     private Scroller scroller;
 
-    public CategoriesView(MainControllerInterface controllerInterface) {
+    public CategoriesView(UserControllerInterface controllerInterface, AdminControllerInterface adminControllerInterface) {
 
         this.setHeight("100%");
 
         UI.getCurrent().getSession().setAttribute("root category id", "0");
         headerPanel = new HeaderPanel(controllerInterface);
-        navPanel = new NavPanel(controllerInterface);
+        navPanel = new NavPanel(controllerInterface, adminControllerInterface);
         List<Obj> objList = controllerInterface.getCategories().getBody();
         List<Map<Integer, String>> mappedObjList = ObjectConverter.convertListOfObjects(objList);
         allCategoriesComponent = new AllCategoriesComponent(mappedObjList);

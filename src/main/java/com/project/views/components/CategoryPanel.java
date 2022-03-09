@@ -1,13 +1,7 @@
 package com.project.views.components;
 
-import com.project.controller.MainControllerInterface;
+import com.project.controller.UserControllerInterface;
 import com.project.entity.AttrEnum;
-import com.vaadin.flow.component.contextmenu.MenuItem;
-import com.vaadin.flow.component.contextmenu.SubMenu;
-import com.vaadin.flow.component.details.Details;
-import com.vaadin.flow.component.html.Hr;
-import com.vaadin.flow.component.menubar.MenuBar;
-import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEvent;
@@ -23,7 +17,7 @@ public class CategoryPanel extends VerticalLayout {
     private HorizontalLayout pageNavLayout;
     private PageNavigationComponent pageNavigationComponent;
 
-    public CategoryPanel(MainControllerInterface controllerInterface, Map<Integer, String> rootMappedCategory,
+    public CategoryPanel(UserControllerInterface controllerInterface, Map<Integer, String> rootMappedCategory,
                          List<Map<Integer, String>> mappedCategories, List<Map<Integer, String>> mappedCourses,
                          Map<String, List<String>> queryParamList, int currentPage, int pagesCount, BeforeEvent event) {
         subcategoryMenu = new SubcategoryMenu(controllerInterface, rootMappedCategory, mappedCategories);

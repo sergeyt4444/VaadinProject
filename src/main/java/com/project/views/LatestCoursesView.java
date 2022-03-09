@@ -1,13 +1,11 @@
 package com.project.views;
 
-import com.project.controller.MainControllerInterface;
-import com.project.entity.Obj;
-import com.project.entity.ObjectTypeEnum;
+import com.project.controller.AdminControllerInterface;
+import com.project.controller.UserControllerInterface;
 import com.project.views.components.*;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Hr;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -23,12 +21,14 @@ public class LatestCoursesView extends VerticalLayout implements BeforeEnterObse
     private NavPanel navPanel;
     private LatestCoursesPanel latestCoursesPanel;
     private HorizontalLayout horizontalLayout;
-    private MainControllerInterface controllerInterface;
+    private UserControllerInterface controllerInterface;
+    private AdminControllerInterface adminControllerInterface;
     private FlexLayout footerLayout;
 
-    public LatestCoursesView(MainControllerInterface controllerInterface) {
+    public LatestCoursesView(UserControllerInterface controllerInterface, AdminControllerInterface adminControllerInterface) {
 
         this.controllerInterface = controllerInterface;
+        this.adminControllerInterface = adminControllerInterface;
         headerPanel = new HeaderPanel(controllerInterface);
 
         UI.getCurrent().getSession().setAttribute("root category id", "0");
@@ -57,7 +57,7 @@ public class LatestCoursesView extends VerticalLayout implements BeforeEnterObse
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
 
         latestCoursesPanel = new LatestCoursesPanel(controllerInterface, beforeEnterEvent);
-        navPanel = new NavPanel(controllerInterface);
+        navPanel = new NavPanel(controllerInterface, adminControllerInterface);
         horizontalLayout.removeAll();
         horizontalLayout.add(navPanel, latestCoursesPanel);
         this.removeAll();

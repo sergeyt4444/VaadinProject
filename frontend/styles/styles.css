@@ -93,6 +93,10 @@
     font-size: 24px;
 }
 
+.search-button {
+    padding: 4px 20px;
+}
+
 .user-label {
     font-size: 20px;
 }

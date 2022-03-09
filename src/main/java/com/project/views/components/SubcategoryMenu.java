@@ -1,7 +1,7 @@
 package com.project.views.components;
 
 
-import com.project.controller.MainControllerInterface;
+import com.project.controller.UserControllerInterface;
 import com.project.entity.AttrEnum;
 import com.project.entity.Obj;
 import com.project.tools.ObjectConverter;
@@ -17,7 +17,7 @@ import java.util.Map;
 public class SubcategoryMenu extends MenuBar {
 
 
-    public SubcategoryMenu(MainControllerInterface controllerInterface, Map<Integer, String> rootMappedCategory, List<Map<Integer, String>> mappedObjList) {
+    public SubcategoryMenu(UserControllerInterface controllerInterface, Map<Integer, String> rootMappedCategory, List<Map<Integer, String>> mappedObjList) {
         Icon icon = new Icon("angle-double-left");
         ComponentEventListener<ClickEvent<MenuItem>> returnListener = e -> {
             if (!rootMappedCategory.containsKey(AttrEnum.PARENT_ID.getValue()) || rootMappedCategory.get(AttrEnum.PARENT_ID.getValue()).equals("0")) {

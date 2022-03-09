@@ -1,8 +1,7 @@
 package com.project.views;
 
-import com.project.controller.MainControllerInterface;
-import com.project.entity.Obj;
-import com.project.tools.ObjectConverter;
+import com.project.controller.AdminControllerInterface;
+import com.project.controller.UserControllerInterface;
 import com.project.views.components.HeaderPanel;
 import com.project.views.components.NavPanel;
 import com.project.views.components.ProfilePanel;
@@ -17,23 +16,22 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import org.springframework.security.access.annotation.Secured;
 
-import java.util.List;
-import java.util.Map;
-
 @Route("vaadin_project/profile")
 @Secured("ROLE_USER")
 public class ProfileView extends VerticalLayout implements BeforeEnterObserver {
 
-    private MainControllerInterface controllerInterface;
+    private UserControllerInterface controllerInterface;
+    private AdminControllerInterface adminControllerInterface;
     private HeaderPanel headerPanel;
     private NavPanel navPanel;
     private ProfilePanel profilePanel;
     private HorizontalLayout horizontalLayout;
     private FlexLayout footerLayout;
 
-    public ProfileView(MainControllerInterface controllerInterface) {
+    public ProfileView(UserControllerInterface controllerInterface, AdminControllerInterface adminControllerInterface) {
 
         this.controllerInterface = controllerInterface;
+        this.adminControllerInterface = adminControllerInterface;
         UI.getCurrent().getSession().setAttribute("root category id", "0");
 
         horizontalLayout = new HorizontalLayout();
@@ -59,7 +57,7 @@ public class ProfileView extends VerticalLayout implements BeforeEnterObserver {
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
 
         headerPanel = new HeaderPanel(controllerInterface);
-        navPanel = new NavPanel(controllerInterface);
+        navPanel = new NavPanel(controllerInterface, adminControllerInterface);
         profilePanel = new ProfilePanel(controllerInterface, beforeEnterEvent);
         horizontalLayout.removeAll();
         horizontalLayout.add(navPanel, profilePanel);

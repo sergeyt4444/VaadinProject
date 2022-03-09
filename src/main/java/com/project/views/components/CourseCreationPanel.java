@@ -1,29 +1,19 @@
 package com.project.views.components;
 
-import com.project.controller.MainControllerInterface;
+import com.project.controller.AdminControllerInterface;
+import com.project.controller.UserControllerInterface;
 import com.project.entity.AttrEnum;
-import com.project.tools.AttributeTool;
 import com.project.tools.ObjectConverter;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
-import com.vaadin.flow.component.select.Select;
-import com.vaadin.flow.component.textfield.IntegerField;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.server.VaadinSession;
 import org.keycloak.KeycloakPrincipal;
-import org.keycloak.representations.IDToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +22,8 @@ public class CourseCreationPanel extends CourseManipulationPanel {
     private Button submitCourse;
     private Button closeDialog;
 
-    public CourseCreationPanel(MainControllerInterface controllerInterface, Dialog dialog) {
+    public CourseCreationPanel(UserControllerInterface controllerInterface,
+                               AdminControllerInterface adminControllerInterface, Dialog dialog) {
         this.setClassName("course-creation-panel");
 
         submitCourse = new Button("Create course");
@@ -61,7 +52,7 @@ public class CourseCreationPanel extends CourseManipulationPanel {
             }
 
             if (ObjectConverter.validateMappedObject(courseAttrs)) {
-                controllerInterface.createCourse(courseAttrs);
+                adminControllerInterface.createCourse(courseAttrs);
                 UI.getCurrent().getPage().reload();
                 Notification notification = new Notification("Course has been created");
                 notification.setPosition(Notification.Position.TOP_END);

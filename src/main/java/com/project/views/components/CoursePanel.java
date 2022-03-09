@@ -1,6 +1,7 @@
 package com.project.views.components;
 
-import com.project.controller.MainControllerInterface;
+import com.project.controller.ModeratorControllerInterface;
+import com.project.controller.UserControllerInterface;
 import com.project.entity.AttrEnum;
 import com.project.entity.Obj;
 import com.project.entity.ObjAttr;
@@ -28,7 +29,6 @@ import org.keycloak.KeycloakPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.Arrays;
 import java.util.Map;
 
 @CssImport("./styles/styles.css")
@@ -58,7 +58,8 @@ public class CoursePanel extends VerticalLayout {
     private Label attributeManagementLabel;
     private MenuBar attributeManagementMenu;
 
-    public CoursePanel(MainControllerInterface controllerInterface, Obj obj) {
+    public CoursePanel(UserControllerInterface controllerInterface,
+                       ModeratorControllerInterface moderatorControllerInterface, Obj obj) {
         this.setAlignItems(Alignment.CENTER);
         this.setJustifyContentMode(JustifyContentMode.START);
         this.addClassName("course-panel");
@@ -153,7 +154,7 @@ public class CoursePanel extends VerticalLayout {
             ComponentEventListener<ClickEvent<MenuItem>> attrDeleteListener = click -> {
                 Dialog dialog = new Dialog();
 
-                DeleteAttributePanel deleteAttributePanel = new DeleteAttributePanel(controllerInterface, obj, dialog);
+                DeleteAttributePanel deleteAttributePanel = new DeleteAttributePanel(controllerInterface, moderatorControllerInterface, obj, dialog);
                 dialog.setModal(false);
                 dialog.setDraggable(true);
 
@@ -166,7 +167,7 @@ public class CoursePanel extends VerticalLayout {
                 Dialog dialog = new Dialog();
 
                 CreateOptionalAttributePanel changeOptionalAttributePanel =
-                        new CreateOptionalAttributePanel(controllerInterface, mappedObj, dialog);
+                        new CreateOptionalAttributePanel(controllerInterface, moderatorControllerInterface, mappedObj, dialog);
                 dialog.setModal(false);
                 dialog.setDraggable(true);
 
@@ -178,7 +179,7 @@ public class CoursePanel extends VerticalLayout {
                 Dialog dialog = new Dialog();
 
                 ChangeOptionalAttributePanel changeOptionalAttributePanel =
-                        new ChangeOptionalAttributePanel(controllerInterface, obj, dialog);
+                        new ChangeOptionalAttributePanel(controllerInterface, moderatorControllerInterface, obj, dialog);
                 dialog.setModal(false);
                 dialog.setDraggable(true);
 
@@ -228,7 +229,7 @@ public class CoursePanel extends VerticalLayout {
 
     }
 
-    private void cancelUserCourse(MainControllerInterface controllerInterface, Map<Integer, String> mappedObj,
+    private void cancelUserCourse(UserControllerInterface controllerInterface, Map<Integer, String> mappedObj,
                                   Map<Integer, String> mappedUser) {
         String updatedParticipants = Integer.toString (Integer.parseInt(mappedObj.get(AttrEnum.CURRENT_PARTICIPANTS.getValue())) - 1);
         String updatedUserCourses;
@@ -249,8 +250,8 @@ public class CoursePanel extends VerticalLayout {
         UI.getCurrent().getPage().reload();
     }
 
-    private void addUserCourse(MainControllerInterface controllerInterface, Map<Integer, String> mappedObj,
-                          Map<Integer, String> mappedUser) {
+    private void addUserCourse(UserControllerInterface controllerInterface, Map<Integer, String> mappedObj,
+                               Map<Integer, String> mappedUser) {
         String updatedParticipants = Integer.toString (Integer.parseInt(mappedObj.get(AttrEnum.CURRENT_PARTICIPANTS.getValue())) + 1);
         Map<String, String> mappedObjAttr = AttributeTool.convertObjAttr("current participants",
                 updatedParticipants, ObjectConverter.getIdFromMappedObj(mappedObj));

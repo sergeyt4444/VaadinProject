@@ -1,6 +1,6 @@
 package com.project.views.components;
 
-import com.project.controller.MainControllerInterface;
+import com.project.controller.UserControllerInterface;
 import com.project.entity.AttrEnum;
 import com.project.entity.Obj;
 import com.project.tools.ObjectConverter;
@@ -15,7 +15,6 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.Location;
 import com.vaadin.flow.router.QueryParameters;
@@ -46,7 +45,7 @@ public class ProfilePanel extends HorizontalLayout {
     private VerticalLayout coursesInfoLayout;
     public static final int PAGE_SIZE = 10;
 
-    public ProfilePanel(MainControllerInterface controllerInterface, BeforeEnterEvent beforeEnterEvent) {
+    public ProfilePanel(UserControllerInterface controllerInterface, BeforeEnterEvent beforeEnterEvent) {
 
         this.setAlignItems(Alignment.START);
         this.setJustifyContentMode(JustifyContentMode.CENTER);

@@ -1,10 +1,10 @@
 package com.project.views;
 
-import com.ctc.wstx.shaded.msv_core.util.Uri;
-import com.project.controller.MainControllerInterface;
-import com.project.entity.AttrEnum;
+import com.project.controller.AdminControllerInterface;
+import com.project.controller.UserControllerInterface;
 import com.project.entity.Obj;
 import com.project.tools.AttributeTool;
+import com.project.tools.MiscTool;
 import com.project.tools.ObjectConverter;
 import com.project.views.components.*;
 import com.vaadin.flow.component.UI;
@@ -14,14 +14,8 @@ import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
-import com.vaadin.flow.server.VaadinSession;
-import feign.template.UriUtils;
 import org.springframework.security.access.annotation.Secured;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Route("vaadin_project")
@@ -34,13 +28,15 @@ public class CategoryView extends VerticalLayout implements HasUrlParameter<Stri
     private NavPanel navPanel;
     private CategoryPanel categoryPanel;
     private HorizontalLayout horizontalLayout;
-    private MainControllerInterface controllerInterface;
+    private UserControllerInterface controllerInterface;
+    private AdminControllerInterface adminControllerInterface;
     private FlexLayout footerLayout;
     public static final int PAGE_SIZE = 8;
 
-    public CategoryView(MainControllerInterface controllerInterface) {
+    public CategoryView(UserControllerInterface controllerInterface, AdminControllerInterface adminControllerInterface) {
 
         this.controllerInterface = controllerInterface;
+        this.adminControllerInterface = adminControllerInterface;
         headerPanel = new HeaderPanel(controllerInterface);
 
         horizontalLayout = new HorizontalLayout();
@@ -85,13 +81,38 @@ public class CategoryView extends VerticalLayout implements HasUrlParameter<Stri
         List<Obj> coursesObj;
         int currentPage = 1;
         int pagesCount;
+        List<String> difficulties;
+        List<String> languages;
+        List<String> formats;
+
+        if (queryParamList.containsKey("difficulty")) {
+            difficulties = queryParamList.get("difficulty");
+        }
+        else {
+            difficulties = AttributeTool.getDifficulties();
+        }
+
+        if (queryParamList.containsKey("language")) {
+            languages = queryParamList.get("language");
+        }
+        else {
+            languages = AttributeTool.getLanguages();
+        }
+
+        if (queryParamList.containsKey("format")) {
+            formats = queryParamList.get("format");
+        }
+        else {
+            formats = AttributeTool.getFormats();
+        }
+
         if (!isFiltered(queryParamList)) {
             pagesCount = (controllerInterface.getCoursesCount(ObjectConverter.getIdFromMappedObj(mappedRootObj)).getBody() - 1)
                     / LatestCoursesPanel.PAGE_SIZE + 1;
         }
         else {
             pagesCount = ((controllerInterface.getFilteredCoursesCount(ObjectConverter.getIdFromMappedObj(mappedRootObj),
-                    queryParamList.get("difficulty"), queryParamList.get("language"), queryParamList.get("format")).getBody() - 1)
+                    difficulties, languages, formats).getBody() - 1)
                     / PAGE_SIZE) + 1;
         }
 
@@ -102,9 +123,9 @@ public class CategoryView extends VerticalLayout implements HasUrlParameter<Stri
                 Map<String, String[]> parameters = new HashMap<>();
                 parameters.put("page", new String[] {"1"});
                 if (isFiltered(queryParamList)) {
-                    parameters.put("difficulty", queryParamList.get("difficulty").toArray(new String[0]));
-                    parameters.put("language", queryParamList.get("language").toArray(new String[0]));
-                    parameters.put("format", queryParamList.get("format").toArray(new String[0]));
+                    parameters.put("difficulty", difficulties.toArray(new String[0]));
+                    parameters.put("language", languages.toArray(new String[0]));
+                    parameters.put("format", formats.toArray(new String[0]));
                 }
                 UI.getCurrent().navigate(location.getPath(), QueryParameters.full(parameters));
 
@@ -114,26 +135,17 @@ public class CategoryView extends VerticalLayout implements HasUrlParameter<Stri
                 Map<String, String[]> parameters = new HashMap<>();
                 parameters.put("page", new String[] {Integer.toString(pagesCount)});
                 if (isFiltered(queryParamList)) {
-                    parameters.put("difficulty", queryParamList.get("difficulty").toArray(new String[0]));
-                    parameters.put("language", queryParamList.get("language").toArray(new String[0]));
-                    parameters.put("format", queryParamList.get("format").toArray(new String[0]));
+                    parameters.put("difficulty", difficulties.toArray(new String[0]));
+                    parameters.put("language", languages.toArray(new String[0]));
+                    parameters.put("format", formats.toArray(new String[0]));
                 }
                 UI.getCurrent().navigate(location.getPath(), QueryParameters.full(parameters));
             }
         }
 
         if (isFiltered(queryParamList)) {
-            if (!queryParamList.containsKey("difficulty")) {
-                queryParamList.put("difficulty", AttributeTool.getDifficulties());
-            }
-            if (!queryParamList.containsKey("language")) {
-                queryParamList.put("language", AttributeTool.getLanguages());
-            }
-            if (!queryParamList.containsKey("format")) {
-                queryParamList.put("format", AttributeTool.getFormats());
-            }
             coursesObj = controllerInterface.getFilteredCourses(ObjectConverter.getIdFromMappedObj(mappedRootObj),
-                    queryParamList.get("difficulty"), queryParamList.get("language"), queryParamList.get("format"),
+                    difficulties, languages, formats,
                     currentPage, PAGE_SIZE).getBody();
         }
         else {
@@ -144,7 +156,7 @@ public class CategoryView extends VerticalLayout implements HasUrlParameter<Stri
         List<Map<Integer, String>> mappedCourses = ObjectConverter.convertListOfObjects(coursesObj);
         UI.getCurrent().getSession().setAttribute("root category id", ObjectConverter.getIdFromMappedObj(mappedRootObj));
 
-        navPanel = new NavPanel(controllerInterface);
+        navPanel = new NavPanel(controllerInterface, adminControllerInterface);
         categoryPanel = new CategoryPanel(controllerInterface, mappedRootObj, mappedSubcategories,
                 mappedCourses, queryParamList, currentPage, pagesCount, event);
 

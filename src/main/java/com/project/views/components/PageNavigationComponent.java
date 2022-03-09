@@ -1,9 +1,6 @@
 package com.project.views.components;
 
-import com.project.controller.MainControllerInterface;
 import com.project.tools.MiscTool;
-import com.project.tools.ObjectConverter;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
@@ -12,7 +9,6 @@ import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.Location;
 import com.vaadin.flow.router.QueryParameters;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

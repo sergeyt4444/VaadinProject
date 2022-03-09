@@ -1,6 +1,6 @@
 package com.project.views.components;
 
-import com.project.controller.MainControllerInterface;
+import com.project.controller.UserControllerInterface;
 import com.project.entity.AttrEnum;
 import com.project.entity.Obj;
 import com.project.tools.ObjectConverter;
@@ -27,7 +27,7 @@ public class LatestCoursesPanel extends VerticalLayout {
     private PageNavigationComponent pageNavigationComponent;
     public static final int PAGE_SIZE = 10;
 
-    public LatestCoursesPanel(MainControllerInterface controllerInterface, BeforeEvent event) {
+    public LatestCoursesPanel(UserControllerInterface controllerInterface, BeforeEvent event) {
 
         setAlignItems(FlexComponent.Alignment.CENTER);
         setJustifyContentMode(FlexComponent.JustifyContentMode.START);

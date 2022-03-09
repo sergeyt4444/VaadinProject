@@ -1,8 +1,8 @@
 package com.project.views;
 
-import com.project.controller.MainControllerInterface;
+import com.project.controller.AdminControllerInterface;
+import com.project.controller.UserControllerInterface;
 import com.project.views.components.HeaderPanel;
-import com.project.views.components.LatestCoursesPanel;
 import com.project.views.components.NavPanel;
 import com.project.views.components.SearchPanel;
 import com.vaadin.flow.component.UI;
@@ -24,10 +24,11 @@ public class SearchView extends VerticalLayout implements BeforeEnterObserver {
     private NavPanel navPanel;
     private SearchPanel searchPanel;
     private HorizontalLayout horizontalLayout;
-    private MainControllerInterface controllerInterface;
+    private UserControllerInterface controllerInterface;
+    private AdminControllerInterface adminControllerInterface;
     private FlexLayout footerLayout;
 
-    public SearchView(MainControllerInterface controllerInterface) {
+    public SearchView(UserControllerInterface controllerInterface, AdminControllerInterface adminControllerInterface) {
 
         this.controllerInterface = controllerInterface;
         headerPanel = new HeaderPanel(controllerInterface);
@@ -58,7 +59,7 @@ public class SearchView extends VerticalLayout implements BeforeEnterObserver {
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
 
         searchPanel = new SearchPanel(controllerInterface, beforeEnterEvent);
-        navPanel = new NavPanel(controllerInterface);
+        navPanel = new NavPanel(controllerInterface, adminControllerInterface);
         horizontalLayout.removeAll();
         horizontalLayout.add(navPanel, searchPanel);
         this.removeAll();
