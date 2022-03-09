@@ -121,7 +121,9 @@ public class HeaderPanel extends HorizontalLayout {
             notifiedCoursesString = mappedUser.get(AttrEnum.COURSES_NOTIFIED.getValue());
         }
         List<String> userCourses = Arrays.asList(userCoursesString.split(";"));
-        List<String> notifiedCourses = Arrays.asList(notifiedCoursesString.split(";"));
+        List<String> notifiedCourses = new ArrayList<>();
+        notifiedCourses.addAll(Arrays.asList(notifiedCoursesString.split(";")));
+        List<String> removalList = new ArrayList<>();
         for (String course: userCourses) {
             if (!notifiedCourses.contains(course) && (course.matches("\\d+"))) {
                 Obj courseObj = controllerInterface.getObjectById(Integer.parseInt(course)).getBody();
@@ -138,6 +140,26 @@ public class HeaderPanel extends HorizontalLayout {
                     controllerInterface.addUserCourse(mappedUserCourses);
                 }
             }
+        }
+        for (String course: notifiedCourses) {
+            if (course.matches("\\d+")) {
+                Obj courseObj = controllerInterface.getObjectById(Integer.parseInt(course)).getBody();
+                Map<Integer, String> mappedCourse = ObjectConverter.convertObject(courseObj);
+                if (Integer.parseInt(mappedCourse.get(AttrEnum.CURRENT_PARTICIPANTS.getValue())) <
+                        Integer.parseInt(mappedCourse.get(AttrEnum.PARTICIPANTS_REQUIRED.getValue()))) {
+                    removalList.add(Integer.toString(ObjectConverter.getIdFromMappedObj(mappedCourse)));
+                }
+            }
+        }
+        if (!removalList.isEmpty()) {
+            notifiedCourses.removeAll(removalList);
+            StringBuilder coursesNotifiedSBuilder = new StringBuilder();
+            for (String notifCourse: notifiedCourses) {
+                coursesNotifiedSBuilder.append(notifCourse).append(";");
+            }
+            Map<String, String> mappedNotifCourses = AttributeTool.convertObjAttr("courses notified",
+                    coursesNotifiedSBuilder.toString(), ObjectConverter.getIdFromMappedObj(mappedUser));
+            controllerInterface.addUserCourse(mappedNotifCourses);
         }
 
     }
