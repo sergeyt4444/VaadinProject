@@ -130,7 +130,8 @@ public class HeaderPanel extends HorizontalLayout {
                 Map<Integer, String> mappedCourse = ObjectConverter.convertObject(courseObj);
                 if (Integer.parseInt(mappedCourse.get(AttrEnum.CURRENT_PARTICIPANTS.getValue())) >=
                         Integer.parseInt(mappedCourse.get(AttrEnum.PARTICIPANTS_REQUIRED.getValue()))) {
-                    Notification notification = new Notification("Your course has enough participants now");
+                    Notification notification = new Notification("Your course \""
+                            + mappedCourse.get(AttrEnum.COURSE_NAME.getValue()) +"\" has enough participants now");
                     notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
                     notification.setPosition(Notification.Position.TOP_END);
                     notification.open();
