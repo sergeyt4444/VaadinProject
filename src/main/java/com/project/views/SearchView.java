@@ -4,7 +4,7 @@ import com.project.controller.AdminControllerInterface;
 import com.project.controller.UserControllerInterface;
 import com.project.views.components.HeaderPanel;
 import com.project.views.components.NavPanel;
-import com.project.views.components.ProfilePanel;
+import com.project.views.components.SearchPanel;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Hr;
@@ -16,22 +16,23 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import org.springframework.security.access.annotation.Secured;
 
-@Route("vaadin_project/profile")
+@Route("vaadin_project/search")
 @Secured("ROLE_USER")
-public class ProfileView extends VerticalLayout implements BeforeEnterObserver {
+public class SearchView extends VerticalLayout implements BeforeEnterObserver {
 
-    private UserControllerInterface controllerInterface;
-    private AdminControllerInterface adminControllerInterface;
     private HeaderPanel headerPanel;
     private NavPanel navPanel;
-    private ProfilePanel profilePanel;
+    private SearchPanel searchPanel;
     private HorizontalLayout horizontalLayout;
+    private UserControllerInterface controllerInterface;
+    private AdminControllerInterface adminControllerInterface;
     private FlexLayout footerLayout;
 
-    public ProfileView(UserControllerInterface controllerInterface, AdminControllerInterface adminControllerInterface) {
+    public SearchView(UserControllerInterface controllerInterface, AdminControllerInterface adminControllerInterface) {
 
         this.controllerInterface = controllerInterface;
-        this.adminControllerInterface = adminControllerInterface;
+        headerPanel = new HeaderPanel(controllerInterface);
+
         UI.getCurrent().getSession().setAttribute("root category id", "0");
 
         horizontalLayout = new HorizontalLayout();
@@ -51,16 +52,16 @@ public class ProfileView extends VerticalLayout implements BeforeEnterObserver {
 
         add(footerLayout);
         expand(footerLayout);
+
     }
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
 
-        headerPanel = new HeaderPanel(controllerInterface);
+        searchPanel = new SearchPanel(controllerInterface, beforeEnterEvent);
         navPanel = new NavPanel(controllerInterface, adminControllerInterface);
-        profilePanel = new ProfilePanel(controllerInterface, beforeEnterEvent);
         horizontalLayout.removeAll();
-        horizontalLayout.add(navPanel, profilePanel);
+        horizontalLayout.add(navPanel, searchPanel);
         this.removeAll();
         add(headerPanel, new Hr(), horizontalLayout, footerLayout);
 

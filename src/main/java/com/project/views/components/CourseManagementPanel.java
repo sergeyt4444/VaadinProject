@@ -1,6 +1,7 @@
 package com.project.views.components;
 
-import com.project.controller.MainControllerInterface;
+import com.project.controller.AdminControllerInterface;
+import com.project.controller.UserControllerInterface;
 import com.project.entity.AttrEnum;
 import com.project.tools.AttributeTool;
 import com.project.tools.ObjectConverter;
@@ -8,16 +9,9 @@ import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.NotificationVariant;
-import com.vaadin.flow.server.VaadinSession;
-import org.keycloak.KeycloakPrincipal;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +21,8 @@ public class CourseManagementPanel extends CourseManipulationPanel {
     private Button submitAttributes;
     private Button closeDialog;
 
-    public CourseManagementPanel(MainControllerInterface controllerInterface, Dialog dialog) {
+    public CourseManagementPanel(UserControllerInterface controllerInterface,
+                                 AdminControllerInterface adminControllerInterface, Dialog dialog) {
         Map<Integer, String> mappedCourse = (Map<Integer, String>) ComponentUtil.getData(UI.getCurrent(), "course");
 
         courseNameField.setValue(mappedCourse.get(AttrEnum.COURSE_NAME.getValue()));
@@ -57,7 +52,7 @@ public class CourseManagementPanel extends CourseManipulationPanel {
             mappedObjAttrs.add(AttributeTool.convertObjAttr(AttributeTool.REQ_ATTRIBUTES.get(AttrEnum.START_DATE.getValue()),
                     startDateDPicker.getValue().toString(), ObjectConverter.getIdFromMappedObj(mappedCourse)));
 
-            controllerInterface.editCourse(mappedObjAttrs);
+            adminControllerInterface.editCourse(mappedObjAttrs);
 
             UI.getCurrent().getPage().reload();
         });

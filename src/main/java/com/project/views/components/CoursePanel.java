@@ -1,6 +1,7 @@
 package com.project.views.components;
 
-import com.project.controller.MainControllerInterface;
+import com.project.controller.ModeratorControllerInterface;
+import com.project.controller.UserControllerInterface;
 import com.project.entity.AttrEnum;
 import com.project.entity.Obj;
 import com.project.entity.ObjAttr;
@@ -28,7 +29,6 @@ import org.keycloak.KeycloakPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.Arrays;
 import java.util.Map;
 
 @CssImport("./styles/styles.css")
@@ -58,7 +58,8 @@ public class CoursePanel extends VerticalLayout {
     private Label attributeManagementLabel;
     private MenuBar attributeManagementMenu;
 
-    public CoursePanel(MainControllerInterface controllerInterface, Obj obj) {
+    public CoursePanel(UserControllerInterface controllerInterface,
+                       ModeratorControllerInterface moderatorControllerInterface, Obj obj) {
         this.setAlignItems(Alignment.CENTER);
         this.setJustifyContentMode(JustifyContentMode.START);
         this.addClassName("course-panel");
@@ -153,7 +154,7 @@ public class CoursePanel extends VerticalLayout {
             ComponentEventListener<ClickEvent<MenuItem>> attrDeleteListener = click -> {
                 Dialog dialog = new Dialog();
 
-                DeleteAttributePanel deleteAttributePanel = new DeleteAttributePanel(controllerInterface, obj, dialog);
+                DeleteAttributePanel deleteAttributePanel = new DeleteAttributePanel(controllerInterface, moderatorControllerInterface, obj, dialog);
                 dialog.setModal(false);
                 dialog.setDraggable(true);
 
@@ -166,7 +167,7 @@ public class CoursePanel extends VerticalLayout {
                 Dialog dialog = new Dialog();
 
                 CreateOptionalAttributePanel changeOptionalAttributePanel =
-                        new CreateOptionalAttributePanel(controllerInterface, mappedObj, dialog);
+                        new CreateOptionalAttributePanel(controllerInterface, moderatorControllerInterface, mappedObj, dialog);
                 dialog.setModal(false);
                 dialog.setDraggable(true);
 
@@ -178,7 +179,7 @@ public class CoursePanel extends VerticalLayout {
                 Dialog dialog = new Dialog();
 
                 ChangeOptionalAttributePanel changeOptionalAttributePanel =
-                        new ChangeOptionalAttributePanel(controllerInterface, obj, dialog);
+                        new ChangeOptionalAttributePanel(controllerInterface, moderatorControllerInterface, obj, dialog);
                 dialog.setModal(false);
                 dialog.setDraggable(true);
 
@@ -199,9 +200,7 @@ public class CoursePanel extends VerticalLayout {
 
         participantsLabel = new Label(mappedObj.get(AttrEnum.CURRENT_PARTICIPANTS.getValue()) + "/" +
                 mappedObj.get(AttrEnum.PARTICIPANTS_REQUIRED.getValue())+ " participants");
-
-
-
+        
 
         joinCourseButton = new Button("Join course");
         joinCourseButton.setClassName("big-button");
@@ -216,7 +215,7 @@ public class CoursePanel extends VerticalLayout {
         });
 
         participationLayout = new VerticalLayout(participantsLabel);
-        if (mappedUser.get(AttrEnum.USER_COURSES.getValue()).contains(mappedObj.get(AttrEnum.COURSE_NAME.getValue()))) {
+        if (mappedUser.get(AttrEnum.USER_COURSES.getValue()).contains(Integer.toString(ObjectConverter.getIdFromMappedObj(mappedObj)) +";")) {
             participationLayout.add(cancelCourseButton);
         }
         else {
@@ -230,13 +229,13 @@ public class CoursePanel extends VerticalLayout {
 
     }
 
-    private void cancelUserCourse(MainControllerInterface controllerInterface, Map<Integer, String> mappedObj,
+    private void cancelUserCourse(UserControllerInterface controllerInterface, Map<Integer, String> mappedObj,
                                   Map<Integer, String> mappedUser) {
         String updatedParticipants = Integer.toString (Integer.parseInt(mappedObj.get(AttrEnum.CURRENT_PARTICIPANTS.getValue())) - 1);
         String updatedUserCourses;
         if (mappedUser.containsKey(AttrEnum.USER_COURSES.getValue())) {
             updatedUserCourses = mappedUser.get(AttrEnum.USER_COURSES.getValue())
-                    .replace(mappedObj.get(AttrEnum.COURSE_NAME.getValue()) + ";", "");
+                    .replace(Integer.toString(ObjectConverter.getIdFromMappedObj(mappedObj)) + ";", "");
         }
         else {
             return;
@@ -251,8 +250,8 @@ public class CoursePanel extends VerticalLayout {
         UI.getCurrent().getPage().reload();
     }
 
-    private void addUserCourse(MainControllerInterface controllerInterface, Map<Integer, String> mappedObj,
-                          Map<Integer, String> mappedUser) {
+    private void addUserCourse(UserControllerInterface controllerInterface, Map<Integer, String> mappedObj,
+                               Map<Integer, String> mappedUser) {
         String updatedParticipants = Integer.toString (Integer.parseInt(mappedObj.get(AttrEnum.CURRENT_PARTICIPANTS.getValue())) + 1);
         Map<String, String> mappedObjAttr = AttributeTool.convertObjAttr("current participants",
                 updatedParticipants, ObjectConverter.getIdFromMappedObj(mappedObj));
@@ -261,14 +260,15 @@ public class CoursePanel extends VerticalLayout {
         String updatedUserCourses;
         if (mappedUser.containsKey(AttrEnum.USER_COURSES.getValue())) {
             updatedUserCourses = mappedUser.get(AttrEnum.USER_COURSES.getValue()) +
-                    mappedObj.get(AttrEnum.COURSE_NAME.getValue()) + ";";
+                    Integer.toString(ObjectConverter.getIdFromMappedObj(mappedObj)) + ";";
         }
         else {
-            updatedUserCourses = mappedObj.get(AttrEnum.COURSE_NAME.getValue() )+ ";";
+            updatedUserCourses = mappedObj.get(Integer.toString(ObjectConverter.getIdFromMappedObj(mappedObj)))+ ";";
         }
         Map<String, String> mappedUserCourses = AttributeTool.convertObjAttr("user courses",
                 updatedUserCourses, ObjectConverter.getIdFromMappedObj(mappedUser));
         controllerInterface.addUserCourse(mappedUserCourses);
+
         UI.getCurrent().getPage().reload();
     }
 

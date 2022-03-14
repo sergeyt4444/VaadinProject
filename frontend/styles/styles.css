@@ -45,12 +45,18 @@
 .course-name-label {
     font-size: 28px;
     background-color: #d8d8d8;
+    min-height: 52px;
+    max-width: 320px;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .course-description-label {
     font-size: 20px;
-    min-height: 52px;
+    min-height: 70px;
     max-width: 320px;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .main-panel {
@@ -68,11 +74,14 @@
     grid-template-columns: 1fr 1fr 1fr 1fr;
     margin-left: 100px;
     padding: 30px;
-    min-width: 90%;
+    min-width: 80%;
+    min-height: 60%;
     overflow-y: auto;
 }
 
-
+.page-nav-layout {
+    min-width: 91%;
+}
 
 .logo-image {
     height: 100px;
@@ -82,6 +91,10 @@
 .search-bar {
     min-width: 48%;
     font-size: 24px;
+}
+
+.search-button {
+    padding: 4px 20px;
 }
 
 .user-label {
@@ -266,5 +279,85 @@
 }
 
 .course-filter-details {;
-    min-width: 1000px;
+    min-width: 1420px;
+}
+
+.filter-element {
+    margin-left: 100px;
+}
+
+.latest-courses-panel {
+    min-width: 1200px;
+    margin-left: 8%;
+    margin-right: 8%;
+}
+
+.latest-courses-grid {
+    min-height: 587px;
+}
+
+.latest-courses-header {
+    margin-top: 18px;
+}
+
+.user-courses-grid {
+    min-height: 475px;
+}
+
+.goto-button {
+    max-height: 24px;
+}
+.search-panel {
+    min-width: 1200px;
+    margin-left: 8%;
+    margin-right: 8%;
+}
+
+.search-grid {
+    min-height: 587px;
+}
+
+.search-header {
+    margin-top: 18px;
+}
+
+.categories-scroller {
+    margin-left: 200px;
+    width: 60%;
+}
+
+.category-node-name-label {
+    padding-left: 20px;
+    min-width: 200px;
+    max-width: 200px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.category-node-descr-label {
+    padding-left: 20px;
+    min-width: 400px;
+    max-width: 400px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.category-content-layout {
+    padding: 4px 20px;
+    background-color: #f0f0f0;
+    min-width: 700px;
+    min-height: 34px;
+}
+
+.subcategories-layout {
+    background-color: #e4e4e4;
+}
+
+.subcategories-details {
+    margin-top: 4px;
+}
+
+.category-node {
+    background-color: #f8f8f8;
+    padding: 10px;
 }

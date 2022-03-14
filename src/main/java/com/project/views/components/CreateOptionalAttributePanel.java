@@ -1,6 +1,7 @@
 package com.project.views.components;
 
-import com.project.controller.MainControllerInterface;
+import com.project.controller.ModeratorControllerInterface;
+import com.project.controller.UserControllerInterface;
 import com.project.entity.Obj;
 import com.project.entity.ObjAttr;
 import com.project.tools.AttributeTool;
@@ -22,7 +23,8 @@ public class CreateOptionalAttributePanel extends FormLayout {
     private Button submitButton;
     private Button closeDialog;
 
-    public CreateOptionalAttributePanel(MainControllerInterface controllerInterface,
+    public CreateOptionalAttributePanel(UserControllerInterface controllerInterface,
+                                        ModeratorControllerInterface moderatorControllerInterface,
                                         Map<Integer, String> mappedObj, Dialog dialog) {
         attrNameField = new TextField("Attribute name");
 
@@ -44,7 +46,7 @@ public class CreateOptionalAttributePanel extends FormLayout {
             if (isOptional && !contains) {
                 Map<String, String> mappedObjAttr = AttributeTool.convertObjAttr(attrNameField.getValue(),
                         attrValueField.getValue(), ObjectConverter.getIdFromMappedObj(mappedObj));
-                controllerInterface.createObjAttr(mappedObjAttr);
+                moderatorControllerInterface.createObjAttr(mappedObjAttr);
                 UI.getCurrent().getPage().reload();
                 Notification notification = new Notification("Attribute has been added");
                 notification.setPosition(Notification.Position.TOP_END);

@@ -1,11 +1,9 @@
 package com.project.views.components;
 
-import com.project.controller.MainControllerInterface;
+import com.project.controller.ModeratorControllerInterface;
+import com.project.controller.UserControllerInterface;
 import com.project.entity.Obj;
-import com.project.entity.ObjAttr;
-import com.project.tools.AttributeTool;
 import com.project.tools.ObjectConverter;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -22,7 +20,8 @@ public class DeleteAttributePanel extends FormLayout {
     private Button submitButton;
     private Button closeDialog;
 
-    public DeleteAttributePanel(MainControllerInterface controllerInterface,
+    public DeleteAttributePanel(UserControllerInterface controllerInterface,
+                                ModeratorControllerInterface moderatorControllerInterface,
                                 Obj obj, Dialog dialog) {
 
         Map<String, Integer> mappedObj = ObjectConverter.convertObjectToEtcAttrNames(obj);
@@ -40,7 +39,7 @@ public class DeleteAttributePanel extends FormLayout {
                 notification.open();
             }
             else {
-                Map<String, Boolean> response = controllerInterface.deleteObjAttr(mappedObj.get(select.getValue()));
+                Map<String, Boolean> response = moderatorControllerInterface.deleteObjAttr(mappedObj.get(select.getValue()));
                 if (response.get("deleted") == true) {
                     UI.getCurrent().getPage().reload();
                     Notification notification = new Notification("Attribute has been deleted");

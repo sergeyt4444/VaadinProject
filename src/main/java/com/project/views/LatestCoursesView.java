@@ -2,36 +2,35 @@ package com.project.views;
 
 import com.project.controller.AdminControllerInterface;
 import com.project.controller.UserControllerInterface;
-import com.project.views.components.HeaderPanel;
-import com.project.views.components.NavPanel;
-import com.project.views.components.ProfilePanel;
+import com.project.views.components.*;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterObserver;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import org.springframework.security.access.annotation.Secured;
 
-@Route("vaadin_project/profile")
+@Route("vaadin_project/latest_courses")
 @Secured("ROLE_USER")
-public class ProfileView extends VerticalLayout implements BeforeEnterObserver {
+public class LatestCoursesView extends VerticalLayout implements BeforeEnterObserver {
 
-    private UserControllerInterface controllerInterface;
-    private AdminControllerInterface adminControllerInterface;
+
     private HeaderPanel headerPanel;
     private NavPanel navPanel;
-    private ProfilePanel profilePanel;
+    private LatestCoursesPanel latestCoursesPanel;
     private HorizontalLayout horizontalLayout;
+    private UserControllerInterface controllerInterface;
+    private AdminControllerInterface adminControllerInterface;
     private FlexLayout footerLayout;
 
-    public ProfileView(UserControllerInterface controllerInterface, AdminControllerInterface adminControllerInterface) {
+    public LatestCoursesView(UserControllerInterface controllerInterface, AdminControllerInterface adminControllerInterface) {
 
         this.controllerInterface = controllerInterface;
         this.adminControllerInterface = adminControllerInterface;
+        headerPanel = new HeaderPanel(controllerInterface);
+
         UI.getCurrent().getSession().setAttribute("root category id", "0");
 
         horizontalLayout = new HorizontalLayout();
@@ -53,14 +52,14 @@ public class ProfileView extends VerticalLayout implements BeforeEnterObserver {
         expand(footerLayout);
     }
 
+
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
 
-        headerPanel = new HeaderPanel(controllerInterface);
+        latestCoursesPanel = new LatestCoursesPanel(controllerInterface, beforeEnterEvent);
         navPanel = new NavPanel(controllerInterface, adminControllerInterface);
-        profilePanel = new ProfilePanel(controllerInterface, beforeEnterEvent);
         horizontalLayout.removeAll();
-        horizontalLayout.add(navPanel, profilePanel);
+        horizontalLayout.add(navPanel, latestCoursesPanel);
         this.removeAll();
         add(headerPanel, new Hr(), horizontalLayout, footerLayout);
 
