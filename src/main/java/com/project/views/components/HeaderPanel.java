@@ -68,7 +68,9 @@ public class HeaderPanel extends HorizontalLayout {
         {
             getUI().ifPresent(ui -> {
                 Map<String, String> parameters = new HashMap<>();
-                parameters.put("query", searchBar.getValue());
+                if (!searchBar.isEmpty()) {
+                    parameters.put("query", searchBar.getValue());
+                }
                 ui.navigate("vaadin_project/search", QueryParameters.simple(parameters));
             });
         });
@@ -88,8 +90,9 @@ public class HeaderPanel extends HorizontalLayout {
         menuBar.setClassName("menu-bar");
 
         ComponentEventListener<ClickEvent<MenuItem>> logoutListener = click -> {
-            getUI().get().getPage().setLocation("http://localhost:8180/auth/realms/myrealm/protocol/openid-connect/logout?redirect_uri=" +
-                    "http://localhost:8081/vaadin_project/main_page");
+            getUI().get().getPage().setLocation("http://localhost:8081/sso/logout");
+//            getUI().get().getPage().setLocation("http://localhost:8180/auth/realms/myrealm/protocol/openid-connect/logout?redirect_uri=" +
+//                    "http://localhost:8081/vaadin_project/main_page");
         };
 
         ComponentEventListener<ClickEvent<MenuItem>> profileListener = click -> {

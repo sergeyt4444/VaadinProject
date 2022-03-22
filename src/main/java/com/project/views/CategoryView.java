@@ -3,6 +3,7 @@ package com.project.views;
 import com.project.controller.AdminControllerInterface;
 import com.project.controller.UserControllerInterface;
 import com.project.entity.Obj;
+import com.project.entity.ObjectTypeEnum;
 import com.project.tools.AttributeTool;
 import com.project.tools.MiscTool;
 import com.project.tools.ObjectConverter;
@@ -73,6 +74,10 @@ public class CategoryView extends VerticalLayout implements HasUrlParameter<Stri
 
 
         Obj rootObj = controllerInterface.getCategoryByName(categoryName).getBody();
+        if (rootObj == null || rootObj.getObjectType().getObjTypesId() != ObjectTypeEnum.CATEGORY.getValue()) {
+            UI.getCurrent().navigate("404");
+            UI.getCurrent().getPage().reload();
+        }
         Map<Integer, String> mappedRootObj = ObjectConverter.convertObject(rootObj);
 
         List<Obj> subcategoriesObj = controllerInterface.getSubCategories(ObjectConverter.getIdFromMappedObj(mappedRootObj)).getBody();
