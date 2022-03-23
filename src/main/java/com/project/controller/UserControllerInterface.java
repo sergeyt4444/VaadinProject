@@ -2,6 +2,7 @@ package com.project.controller;
 
 import com.project.entity.*;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,14 @@ import java.util.*;
 public interface UserControllerInterface {
 
     @GetMapping("/user/main_categories")
-    public ResponseEntity<List<Obj>> getMainCategories();
+    public ResponseEntity<List<Obj>> getMainCategories(@RequestParam(defaultValue = "1") Integer page,
+                                                       @RequestParam(defaultValue = "10") Integer pageSize);
+
+    @GetMapping("/user/main_categories_count")
+    public ResponseEntity<Integer> getMainCategoriesCount();
+
+    @GetMapping("/user/users")
+    public ResponseEntity<List<Obj>> getUsers();
 
     @GetMapping("/user/category/{name}")
     public ResponseEntity<Obj> getCategoryByName(@PathVariable(value = "name")String name);
@@ -79,5 +87,8 @@ public interface UserControllerInterface {
 
     @GetMapping("/user/categories")
     public ResponseEntity<List<Obj>> getCategories();
+
+    @PostMapping("/user/register")
+    public ResponseEntity registerUser(@RequestBody Map<Integer, String> mappedObj);
 
 }

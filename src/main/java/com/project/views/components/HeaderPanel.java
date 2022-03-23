@@ -80,6 +80,28 @@ public class HeaderPanel extends HorizontalLayout {
         KeycloakPrincipal principal = ((KeycloakPrincipal) authentication.getPrincipal());
         String username = principal.getKeycloakSecurityContext().getToken().getPreferredUsername();
 
+
+        Object currentUser = UI.getCurrent().getSession().getAttribute("user");
+
+        if (currentUser == null) {
+            List<Obj> userList = controllerInterface.getUsers().getBody();
+            List<Map<Integer, String>> mappedUserList = ObjectConverter.convertListOfObjects(userList);
+            boolean userExists = false;
+            for (Map<Integer, String> mappedUser:mappedUserList) {
+                if (username.equals(mappedUser.get(AttrEnum.USER_NAME.getValue()))) {
+                    userExists = true;
+                }
+            }
+            if (!userExists) {
+                Map<Integer, String> newUser = new HashMap<>();
+                newUser.put(AttrEnum.USER_NAME.getValue(), username);
+                newUser.put(AttrEnum.USER_COURSES.getValue(), "");
+                newUser.put(AttrEnum.COURSES_NOTIFIED.getValue(), "");
+                controllerInterface.registerUser(newUser);
+            }
+            UI.getCurrent().getSession().setAttribute("user", username);
+        }
+
         userAvatar = new Avatar(username);
         userAvatar.setClassName("user-avatar");
 
@@ -91,8 +113,6 @@ public class HeaderPanel extends HorizontalLayout {
 
         ComponentEventListener<ClickEvent<MenuItem>> logoutListener = click -> {
             getUI().get().getPage().setLocation("http://localhost:8081/sso/logout");
-//            getUI().get().getPage().setLocation("http://localhost:8180/auth/realms/myrealm/protocol/openid-connect/logout?redirect_uri=" +
-//                    "http://localhost:8081/vaadin_project/main_page");
         };
 
         ComponentEventListener<ClickEvent<MenuItem>> profileListener = click -> {
