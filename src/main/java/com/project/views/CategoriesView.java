@@ -30,6 +30,7 @@ public class CategoriesView extends VerticalLayout {
     public CategoriesView(UserControllerInterface controllerInterface, AdminControllerInterface adminControllerInterface) {
 
         this.setHeight("100%");
+        this.setWidth("100%");
 
         UI.getCurrent().getSession().setAttribute("root category id", "0");
         headerPanel = new HeaderPanel(controllerInterface);
@@ -41,7 +42,7 @@ public class CategoriesView extends VerticalLayout {
         scroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
         scroller.addClassName("categories-scroller");
         horizontalLayout = new HorizontalLayout(navPanel, scroller);
-        horizontalLayout.setHeight("100%");
+        horizontalLayout.setHeight("85%");
         horizontalLayout.setWidthFull();
         horizontalLayout.setMinHeight("700px");
         horizontalLayout.setAlignItems(FlexComponent.Alignment.STRETCH);

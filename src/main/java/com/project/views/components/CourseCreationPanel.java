@@ -38,6 +38,7 @@ public class CourseCreationPanel extends CourseManipulationPanel {
             courseAttrs.put(AttrEnum.LANGUAGE.getValue(), langSelect.getValue());
             courseAttrs.put(AttrEnum.FORMAT.getValue(), formatSelect.getValue());
             courseAttrs.put(AttrEnum.START_DATE.getValue(), startDateDPicker.getValue().toString());
+            courseAttrs.put(AttrEnum.SUBSCRIBERS.getValue(), "");
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             KeycloakPrincipal principal = ((KeycloakPrincipal) authentication.getPrincipal());
             String username = principal.getKeycloakSecurityContext().getToken().getGivenName();

@@ -214,6 +214,11 @@ public class CoursePanel extends VerticalLayout {
             cancelUserCourse(controllerInterface, mappedObj, mappedUser);
         });
 
+        if (Integer.parseInt(mappedObj.get(AttrEnum.CURRENT_PARTICIPANTS.getValue()))
+                >= Integer.parseInt(mappedObj.get(AttrEnum.PARTICIPANTS_REQUIRED.getValue()))) {
+            cancelCourseButton.setEnabled(false);
+            joinCourseButton.setEnabled(false);
+        }
         participationLayout = new VerticalLayout(participantsLabel);
         if (mappedUser.get(AttrEnum.USER_COURSES.getValue()).contains(Integer.toString(ObjectConverter.getIdFromMappedObj(mappedObj)) +";")) {
             participationLayout.add(cancelCourseButton);
@@ -231,44 +236,80 @@ public class CoursePanel extends VerticalLayout {
 
     private void cancelUserCourse(UserControllerInterface controllerInterface, Map<Integer, String> mappedObj,
                                   Map<Integer, String> mappedUser) {
-        String updatedParticipants = Integer.toString (Integer.parseInt(mappedObj.get(AttrEnum.CURRENT_PARTICIPANTS.getValue())) - 1);
-        String updatedUserCourses;
-        if (mappedUser.containsKey(AttrEnum.USER_COURSES.getValue())) {
-            updatedUserCourses = mappedUser.get(AttrEnum.USER_COURSES.getValue())
-                    .replace(Integer.toString(ObjectConverter.getIdFromMappedObj(mappedObj)) + ";", "");
-        }
-        else {
-            return;
-        }
+        Obj upToDateCourse = controllerInterface.getObjectById(ObjectConverter.getIdFromMappedObj(mappedObj)).getBody();
+        Map<Integer, String> mappedUpToDateCourse = ObjectConverter.convertObject(upToDateCourse);
+        if (Integer.parseInt(mappedUpToDateCourse.get(AttrEnum.CURRENT_PARTICIPANTS.getValue())) < Integer.parseInt(
+                mappedUpToDateCourse.get(AttrEnum.PARTICIPANTS_REQUIRED.getValue())
+        )) {
+            String updatedParticipants = Integer.toString (Integer.parseInt(mappedObj.get(AttrEnum.CURRENT_PARTICIPANTS.getValue())) - 1);
+            String updatedUserCourses;
+            if (mappedUser.containsKey(AttrEnum.USER_COURSES.getValue())) {
+                updatedUserCourses = mappedUser.get(AttrEnum.USER_COURSES.getValue())
+                        .replace(Integer.toString(ObjectConverter.getIdFromMappedObj(mappedObj)) + ";", "");
+            }
+            else {
+                return;
+            }
 
-        Map<String, String> mappedObjAttr = AttributeTool.convertObjAttr("current participants",
-                updatedParticipants, ObjectConverter.getIdFromMappedObj(mappedObj));
-        controllerInterface.addUserCourse(mappedObjAttr);
-        Map<String, String> mappedUserCourses = AttributeTool.convertObjAttr("user courses",
-                updatedUserCourses, ObjectConverter.getIdFromMappedObj(mappedUser));
-        controllerInterface.addUserCourse(mappedUserCourses);
+            Map<String, String> mappedObjAttr = AttributeTool.convertObjAttr("current participants",
+                    updatedParticipants, ObjectConverter.getIdFromMappedObj(mappedObj));
+            controllerInterface.addUserCourse(mappedObjAttr);
+            Map<String, String> mappedUserCourses = AttributeTool.convertObjAttr("user courses",
+                    updatedUserCourses, ObjectConverter.getIdFromMappedObj(mappedUser));
+            controllerInterface.addUserCourse(mappedUserCourses);
+
+
+            String updatedCourse;
+            if (mappedObj.containsKey(AttrEnum.SUBSCRIBERS.getValue())) {
+                updatedCourse = mappedObj.get(AttrEnum.SUBSCRIBERS.getValue())
+                        .replace(Integer.toString(ObjectConverter.getIdFromMappedObj(mappedUser)) + ";", "");
+            }
+            else {
+                return;
+            }
+
+            Map<String, String> mappedCourse = AttributeTool.convertObjAttr("subscribers",
+                    updatedCourse, ObjectConverter.getIdFromMappedObj(mappedObj));
+            controllerInterface.addUserCourse(mappedCourse);
+        }
         UI.getCurrent().getPage().reload();
     }
 
     private void addUserCourse(UserControllerInterface controllerInterface, Map<Integer, String> mappedObj,
                                Map<Integer, String> mappedUser) {
-        String updatedParticipants = Integer.toString (Integer.parseInt(mappedObj.get(AttrEnum.CURRENT_PARTICIPANTS.getValue())) + 1);
-        Map<String, String> mappedObjAttr = AttributeTool.convertObjAttr("current participants",
-                updatedParticipants, ObjectConverter.getIdFromMappedObj(mappedObj));
-        controllerInterface.addUserCourse(mappedObjAttr);
+        Obj upToDateCourse = controllerInterface.getObjectById(ObjectConverter.getIdFromMappedObj(mappedObj)).getBody();
+        Map<Integer, String> mappedUpToDateCourse = ObjectConverter.convertObject(upToDateCourse);
+        if (Integer.parseInt(mappedUpToDateCourse.get(AttrEnum.CURRENT_PARTICIPANTS.getValue())) < Integer.parseInt(
+                mappedUpToDateCourse.get(AttrEnum.PARTICIPANTS_REQUIRED.getValue())
+        )) {
+            String updatedParticipants = Integer.toString(Integer.parseInt(mappedObj.get(AttrEnum.CURRENT_PARTICIPANTS.getValue())) + 1);
+            Map<String, String> mappedObjAttr = AttributeTool.convertObjAttr("current participants",
+                    updatedParticipants, ObjectConverter.getIdFromMappedObj(mappedObj));
+            controllerInterface.addUserCourse(mappedObjAttr);
 
-        String updatedUserCourses;
-        if (mappedUser.containsKey(AttrEnum.USER_COURSES.getValue())) {
-            updatedUserCourses = mappedUser.get(AttrEnum.USER_COURSES.getValue()) +
-                    Integer.toString(ObjectConverter.getIdFromMappedObj(mappedObj)) + ";";
-        }
-        else {
-            updatedUserCourses = mappedObj.get(Integer.toString(ObjectConverter.getIdFromMappedObj(mappedObj)))+ ";";
-        }
-        Map<String, String> mappedUserCourses = AttributeTool.convertObjAttr("user courses",
-                updatedUserCourses, ObjectConverter.getIdFromMappedObj(mappedUser));
-        controllerInterface.addUserCourse(mappedUserCourses);
+            String updatedUserCourses;
+            if (mappedUser.containsKey(AttrEnum.USER_COURSES.getValue())) {
+                updatedUserCourses = mappedUser.get(AttrEnum.USER_COURSES.getValue()) +
+                        Integer.toString(ObjectConverter.getIdFromMappedObj(mappedObj)) + ";";
+            } else {
+                updatedUserCourses = mappedObj.get(Integer.toString(ObjectConverter.getIdFromMappedObj(mappedObj))) + ";";
+            }
+            Map<String, String> mappedUserCourses = AttributeTool.convertObjAttr("user courses",
+                    updatedUserCourses, ObjectConverter.getIdFromMappedObj(mappedUser));
+            controllerInterface.addUserCourse(mappedUserCourses);
 
+            String updatedCourse;
+            if (mappedObj.containsKey(AttrEnum.SUBSCRIBERS.getValue()) && mappedObj.get(AttrEnum.SUBSCRIBERS.getValue()) != null) {
+                updatedCourse = mappedObj.get(AttrEnum.SUBSCRIBERS.getValue()) +
+                        Integer.toString(ObjectConverter.getIdFromMappedObj(mappedUser)) + ";";
+            } else {
+                updatedCourse = Integer.toString(ObjectConverter.getIdFromMappedObj(mappedUser)) + ";";
+            }
+            Map<String, String> mappedCourse = AttributeTool.convertObjAttr("subscribers",
+                    updatedCourse, ObjectConverter.getIdFromMappedObj(mappedObj));
+            controllerInterface.addUserCourse(mappedCourse);
+
+        }
         UI.getCurrent().getPage().reload();
     }
 
