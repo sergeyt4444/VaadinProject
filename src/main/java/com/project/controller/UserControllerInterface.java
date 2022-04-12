@@ -1,6 +1,8 @@
 package com.project.controller;
 
 import com.project.entity.*;
+import com.project.tools.ObjectConverter;
+import com.sun.jersey.api.NotFoundException;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -90,5 +92,8 @@ public interface UserControllerInterface {
 
     @PostMapping("/user/register")
     public ResponseEntity registerUser(@RequestBody Map<Integer, String> mappedObj);
+
+    @PostMapping("/user/mail")
+    public ResponseEntity sendMailNotifications(@RequestBody Integer courseId);
 
 }
