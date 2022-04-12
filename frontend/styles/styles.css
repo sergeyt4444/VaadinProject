@@ -63,7 +63,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     padding: 30px;
-    margin-left: 100px;
+    margin-left: 0px;
     min-width: 80%;
     min-height: 90%;
     overflow-y: auto;
@@ -361,3 +361,4 @@
     background-color: #f8f8f8;
     padding: 10px;
 }
+

@@ -62,13 +62,18 @@ public class CourseView extends VerticalLayout implements BeforeEnterObserver {
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
         Location location = beforeEnterEvent.getLocation();
         QueryParameters queryParameters = location.getQueryParameters();
+        if (!queryParameters.getParameters().containsKey("id") ||
+                !queryParameters.getParameters().get("id").get(0).matches("\\d+")) {
+            UI.getCurrent().navigate("400");
+            UI.getCurrent().getPage().reload();
+        }
         int courseId = Integer.parseInt(queryParameters.getParameters().get("id").get(0));
         Obj course = controllerInterface.getObjectById(courseId).getBody();
         if (course == null || course.getObjectType().getObjTypesId() != ObjectTypeEnum.COURSE.getValue()) {
             UI.getCurrent().navigate("404");
+            UI.getCurrent().getPage().reload();
         }
         else {
-
             coursePanel = new CoursePanel(controllerInterface, moderatorControllerInterface, course);
             navPanel = new NavPanel(controllerInterface, adminControllerInterface);
             Authentication userAuthentication = SecurityContextHolder.getContext().getAuthentication();
