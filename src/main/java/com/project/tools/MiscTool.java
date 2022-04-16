@@ -3,10 +3,7 @@ package com.project.tools;
 import feign.template.UriUtils;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MiscTool {
 
@@ -17,6 +14,17 @@ public class MiscTool {
                     .map(lang -> UriUtils.encode(lang, StandardCharsets.UTF_8)).toArray(String[]::new));
         }
         return convertedMap;
+    }
+
+    public static String removeNumFromStringList(String stringList, int forRemoval) {
+        List<String> list = new ArrayList<>();
+        list.addAll(Arrays.asList(stringList.split(";")));
+        list.remove(Integer.toString(forRemoval));
+        StringBuilder result = new StringBuilder();
+        for (String elem: list) {
+            result.append(elem).append(";");
+        }
+        return result.toString();
     }
 
 }

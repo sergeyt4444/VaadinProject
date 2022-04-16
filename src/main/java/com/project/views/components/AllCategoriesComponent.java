@@ -2,16 +2,13 @@ package com.project.views.components;
 
 import com.project.entity.AttrEnum;
 import com.project.tools.ObjectConverter;
-import com.project.views.CategoriesView;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.router.QueryParameters;
-import org.checkerframework.checker.units.qual.C;
 
 import java.util.*;
 
@@ -69,9 +66,7 @@ public class AllCategoriesComponent extends VerticalLayout {
             goToCourse.setClassName("goto-button");
             goToCourse.addClickListener(click -> {
                 getUI().ifPresent(ui -> {
-                    Map<String, String> parameters = new HashMap<>();
-                    parameters.put("id", Integer.toString(ObjectConverter.getIdFromMappedObj(map)));
-                    ui.navigate("vaadin_project/course", QueryParameters.simple(parameters));
+                    ui.navigate("vaadin_project/" + map.get(AttrEnum.COURSE_NAME.getValue()));
                 });
             });
             return goToCourse;

@@ -1,9 +1,7 @@
 package com.project.views.components;
 
 
-import com.project.entity.AttrEnum;
 import com.project.tools.AttributeTool;
-import com.project.tools.ObjectConverter;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;

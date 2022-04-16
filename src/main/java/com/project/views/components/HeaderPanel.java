@@ -21,7 +21,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.server.StreamResource;
-import com.vaadin.flow.shared.Registration;
 import org.keycloak.KeycloakPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

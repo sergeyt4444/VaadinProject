@@ -6,6 +6,7 @@ import com.project.entity.AttrEnum;
 import com.project.entity.Obj;
 import com.project.entity.ObjAttr;
 import com.project.tools.AttributeTool;
+import com.project.tools.MiscTool;
 import com.project.tools.ObjectConverter;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -244,8 +245,8 @@ public class CoursePanel extends VerticalLayout {
             String updatedParticipants = Integer.toString (Integer.parseInt(mappedUpToDateCourse.get(AttrEnum.CURRENT_PARTICIPANTS.getValue())) - 1);
             String updatedUserCourses;
             if (mappedUser.containsKey(AttrEnum.USER_COURSES.getValue())) {
-                updatedUserCourses = mappedUser.get(AttrEnum.USER_COURSES.getValue())
-                        .replace(Integer.toString(ObjectConverter.getIdFromMappedObj(mappedUpToDateCourse)) + ";", "");
+                updatedUserCourses = MiscTool.removeNumFromStringList(mappedUser.get(AttrEnum.USER_COURSES.getValue()),
+                        ObjectConverter.getIdFromMappedObj(mappedUpToDateCourse));
             }
             else {
                 return;
@@ -261,8 +262,8 @@ public class CoursePanel extends VerticalLayout {
 
             String updatedCourse;
             if (mappedUpToDateCourse.containsKey(AttrEnum.SUBSCRIBERS.getValue())) {
-                updatedCourse = mappedUpToDateCourse.get(AttrEnum.SUBSCRIBERS.getValue())
-                        .replace(Integer.toString(ObjectConverter.getIdFromMappedObj(mappedUser)) + ";", "");
+                updatedCourse = MiscTool.removeNumFromStringList(mappedUpToDateCourse.get(AttrEnum.SUBSCRIBERS.getValue()),
+                                ObjectConverter.getIdFromMappedObj(mappedUser));
             }
             else {
                 return;
