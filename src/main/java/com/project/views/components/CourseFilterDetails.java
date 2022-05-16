@@ -11,9 +11,11 @@ import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.QueryParameters;
 import feign.template.UriUtils;
+import sun.nio.cs.UTF_32;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CourseFilterDetails extends HorizontalLayout {
 
@@ -36,7 +38,9 @@ public class CourseFilterDetails extends HorizontalLayout {
             preselectedDif = queryParamList.get("difficulty");
         }
         if (queryParamList.containsKey("language")) {
-            preselectedLang = queryParamList.get("language");
+            preselectedLang = queryParamList.get("language").stream().map(
+                    lang ->  UriUtils.decode(lang, UTF_32.defaultCharset())
+            ).collect(Collectors.toList());
         }
         if (queryParamList.containsKey("format")) {
             preselectedFormat = queryParamList.get("format");

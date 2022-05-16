@@ -3,6 +3,7 @@ package com.project.views.components;
 import com.project.controller.AdminControllerInterface;
 import com.project.controller.UserControllerInterface;
 import com.project.entity.AttrEnum;
+import com.project.entity.Obj;
 import com.project.tools.AttributeTool;
 import com.project.tools.ObjectConverter;
 import com.vaadin.flow.component.ComponentUtil;
@@ -36,24 +37,26 @@ public class CourseManagementPanel extends CourseManipulationPanel {
         submitAttributes = new Button("Submit");
         submitAttributes.addClassName("course-creation-button");
         submitAttributes.addClickListener(click -> {
-            List<Map<String, String>> mappedObjAttrs = new ArrayList<>();
-            mappedObjAttrs.add(AttributeTool.convertObjAttr(AttributeTool.REQ_ATTRIBUTES.get(AttrEnum.COURSE_NAME.getValue()),
-                    courseNameField.getValue(), ObjectConverter.getIdFromMappedObj(mappedCourse)));
-            mappedObjAttrs.add(AttributeTool.convertObjAttr(AttributeTool.REQ_ATTRIBUTES.get(AttrEnum.COURSE_DESCRIPTION.getValue()),
-                    courseDescrField.getValue(), ObjectConverter.getIdFromMappedObj(mappedCourse)));
-            mappedObjAttrs.add(AttributeTool.convertObjAttr(AttributeTool.REQ_ATTRIBUTES.get(AttrEnum.PARTICIPANTS_REQUIRED.getValue()),
-                    Integer.toString(minParticipantsField.getValue()), ObjectConverter.getIdFromMappedObj(mappedCourse)));
-            mappedObjAttrs.add(AttributeTool.convertObjAttr(AttributeTool.REQ_ATTRIBUTES.get(AttrEnum.DIFFICULTY.getValue()),
-                    difficultySelect.getValue(), ObjectConverter.getIdFromMappedObj(mappedCourse)));
-            mappedObjAttrs.add(AttributeTool.convertObjAttr(AttributeTool.REQ_ATTRIBUTES.get(AttrEnum.LANGUAGE.getValue()),
-                    langSelect.getValue(), ObjectConverter.getIdFromMappedObj(mappedCourse)));
-            mappedObjAttrs.add(AttributeTool.convertObjAttr(AttributeTool.REQ_ATTRIBUTES.get(AttrEnum.FORMAT.getValue()),
-                    formatSelect.getValue(), ObjectConverter.getIdFromMappedObj(mappedCourse)));
-            mappedObjAttrs.add(AttributeTool.convertObjAttr(AttributeTool.REQ_ATTRIBUTES.get(AttrEnum.START_DATE.getValue()),
-                    startDateDPicker.getValue().toString(), ObjectConverter.getIdFromMappedObj(mappedCourse)));
+            Obj upToDatecourse = controllerInterface.getObjectById(ObjectConverter.getIdFromMappedObj(mappedCourse)).getBody();
+            if (upToDatecourse != null) {
+                List<Map<String, String>> mappedObjAttrs = new ArrayList<>();
+                mappedObjAttrs.add(AttributeTool.convertObjAttr(AttributeTool.REQ_ATTRIBUTES.get(AttrEnum.COURSE_NAME.getValue()),
+                        courseNameField.getValue(), ObjectConverter.getIdFromMappedObj(mappedCourse)));
+                mappedObjAttrs.add(AttributeTool.convertObjAttr(AttributeTool.REQ_ATTRIBUTES.get(AttrEnum.COURSE_DESCRIPTION.getValue()),
+                        courseDescrField.getValue(), ObjectConverter.getIdFromMappedObj(mappedCourse)));
+                mappedObjAttrs.add(AttributeTool.convertObjAttr(AttributeTool.REQ_ATTRIBUTES.get(AttrEnum.PARTICIPANTS_REQUIRED.getValue()),
+                        Integer.toString(minParticipantsField.getValue()), ObjectConverter.getIdFromMappedObj(mappedCourse)));
+                mappedObjAttrs.add(AttributeTool.convertObjAttr(AttributeTool.REQ_ATTRIBUTES.get(AttrEnum.DIFFICULTY.getValue()),
+                        difficultySelect.getValue(), ObjectConverter.getIdFromMappedObj(mappedCourse)));
+                mappedObjAttrs.add(AttributeTool.convertObjAttr(AttributeTool.REQ_ATTRIBUTES.get(AttrEnum.LANGUAGE.getValue()),
+                        langSelect.getValue(), ObjectConverter.getIdFromMappedObj(mappedCourse)));
+                mappedObjAttrs.add(AttributeTool.convertObjAttr(AttributeTool.REQ_ATTRIBUTES.get(AttrEnum.FORMAT.getValue()),
+                        formatSelect.getValue(), ObjectConverter.getIdFromMappedObj(mappedCourse)));
+                mappedObjAttrs.add(AttributeTool.convertObjAttr(AttributeTool.REQ_ATTRIBUTES.get(AttrEnum.START_DATE.getValue()),
+                        startDateDPicker.getValue().toString(), ObjectConverter.getIdFromMappedObj(mappedCourse)));
 
-            adminControllerInterface.editCourse(mappedObjAttrs);
-
+                adminControllerInterface.editCourse(mappedObjAttrs);
+            }
             UI.getCurrent().getPage().reload();
         });
 

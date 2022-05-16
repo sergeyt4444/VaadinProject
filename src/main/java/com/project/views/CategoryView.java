@@ -16,6 +16,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.*;
 
@@ -94,21 +96,21 @@ public class CategoryView extends VerticalLayout implements HasUrlParameter<Stri
             difficulties = queryParamList.get("difficulty");
         }
         else {
-            difficulties = AttributeTool.getDifficulties();
+            difficulties = new ArrayList<>();
         }
 
         if (queryParamList.containsKey("language")) {
             languages = queryParamList.get("language");
         }
         else {
-            languages = AttributeTool.getLanguages();
+            languages = new ArrayList<>();
         }
 
         if (queryParamList.containsKey("format")) {
             formats = queryParamList.get("format");
         }
         else {
-            formats = AttributeTool.getFormats();
+            formats = new ArrayList<>();
         }
 
         if (!isFiltered(queryParamList)) {
@@ -162,6 +164,10 @@ public class CategoryView extends VerticalLayout implements HasUrlParameter<Stri
         UI.getCurrent().getSession().setAttribute("root category id", ObjectConverter.getIdFromMappedObj(mappedRootObj));
 
         navPanel = new NavPanel(controllerInterface, adminControllerInterface);
+        Authentication userAuthentication = SecurityContextHolder.getContext().getAuthentication();
+        if (userAuthentication != null && userAuthentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            navPanel.addCategoryDeletionButton(controllerInterface, adminControllerInterface);
+        }
         categoryPanel = new CategoryPanel(controllerInterface, mappedRootObj, mappedSubcategories,
                 mappedCourses, queryParamList, currentPage, pagesCount, event);
 

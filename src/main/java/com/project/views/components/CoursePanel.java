@@ -238,6 +238,9 @@ public class CoursePanel extends VerticalLayout {
     private void cancelUserCourse(UserControllerInterface controllerInterface, Map<Integer, String> mappedObj,
                                   Map<Integer, String> mappedUser) {
         Obj upToDateCourse = controllerInterface.getObjectById(ObjectConverter.getIdFromMappedObj(mappedObj)).getBody();
+        if (upToDateCourse == null) {
+            return;
+        }
         Map<Integer, String> mappedUpToDateCourse = ObjectConverter.convertObject(upToDateCourse);
         if (Integer.parseInt(mappedUpToDateCourse.get(AttrEnum.CURRENT_PARTICIPANTS.getValue())) < Integer.parseInt(
                 mappedUpToDateCourse.get(AttrEnum.PARTICIPANTS_REQUIRED.getValue())
@@ -279,6 +282,9 @@ public class CoursePanel extends VerticalLayout {
     private void addUserCourse(UserControllerInterface controllerInterface, Map<Integer, String> mappedObj,
                                Map<Integer, String> mappedUser) {
         Obj upToDateCourse = controllerInterface.getObjectById(ObjectConverter.getIdFromMappedObj(mappedObj)).getBody();
+        if (upToDateCourse == null) {
+            return;
+        }
         Map<Integer, String> mappedUpToDateCourse = ObjectConverter.convertObject(upToDateCourse);
         if (Integer.parseInt(mappedUpToDateCourse.get(AttrEnum.CURRENT_PARTICIPANTS.getValue())) < Integer.parseInt(
                 mappedUpToDateCourse.get(AttrEnum.PARTICIPANTS_REQUIRED.getValue())

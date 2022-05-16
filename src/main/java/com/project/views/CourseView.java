@@ -80,6 +80,9 @@ public class CourseView extends VerticalLayout implements BeforeEnterObserver {
             if (userAuthentication != null && userAuthentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MODERATOR"))) {
                 navPanel.addAttributeManagementButton(controllerInterface, adminControllerInterface);
             }
+            if (userAuthentication != null && userAuthentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+                navPanel.addCourseDeletionButton(controllerInterface, adminControllerInterface);
+            }
             horizontalLayout = new HorizontalLayout(navPanel, coursePanel);
             horizontalLayout.setHeight("100%");
             horizontalLayout.setMinHeight("700px");

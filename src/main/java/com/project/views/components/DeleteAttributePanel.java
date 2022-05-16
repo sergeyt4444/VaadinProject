@@ -54,6 +54,7 @@ public class DeleteAttributePanel extends FormLayout {
 
                 }
             }
+            UI.getCurrent().getPage().reload();
         });
         if (mappedObj.isEmpty()) {
             submitButton.setEnabled(false);
