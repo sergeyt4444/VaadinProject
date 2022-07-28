@@ -2,7 +2,6 @@ package com.project.controller;
 
 import com.project.entity.*;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -90,5 +89,8 @@ public interface UserControllerInterface {
 
     @PostMapping("/user/register")
     public ResponseEntity registerUser(@RequestBody Map<Integer, String> mappedObj);
+
+    @PostMapping("/user/mail")
+    public ResponseEntity sendMailNotifications(@RequestBody Integer courseId);
 
 }
