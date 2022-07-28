@@ -1,5 +1,7 @@
 package com.project.views.components;
 
+import com.project.views.CourseView;
+
 import com.project.controller.ModeratorControllerInterface;
 import com.project.controller.UserControllerInterface;
 import com.project.entity.AttrEnum;
@@ -17,23 +19,25 @@ import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Hr;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
+import com.vaadin.flow.router.QueryParameters;
+import com.vaadin.flow.router.RouteParameters;
+import com.vaadin.flow.router.RouterLink;
 import org.keycloak.KeycloakPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.Map;
+import java.util.*;
 
 @CssImport("./styles/styles.css")
 public class CoursePanel extends VerticalLayout {
+
+    private boolean requirementsMet;
 
     private H1 nameHeader;
     private HorizontalLayout creationInfoLayout;
@@ -48,9 +52,13 @@ public class CoursePanel extends VerticalLayout {
     private Label difficultyLabel;
     private Label languageLabel;
     private Label formatLabel;
-    private VerticalLayout attributeSubLayout;
+    private HorizontalLayout subLayout;
+    private VerticalLayout requirementsLayout;
+    private Label requirementsLabel;
     private VerticalLayout attributeLayout;
+    private VerticalLayout attributeSubLayout;
     private Scroller scroller;
+    private Scroller requirementsScroller;
     private Label attributeLabel;
     private Label participantsLabel;
     private Button joinCourseButton;
@@ -120,9 +128,26 @@ public class CoursePanel extends VerticalLayout {
         courseDescrLayout.setClassName("course-descr-layout");
         courseDescrLayout.setAlignItems(Alignment.CENTER);
 
+        subLayout = new HorizontalLayout();
+        subLayout.setClassName("attribute-layout");
+        subLayout.setJustifyContentMode(JustifyContentMode.START);
+        subLayout.setAlignItems(Alignment.START);
+
+        requirementsMet = true;
+
+        requirementsLayout = new VerticalLayout();
+        requirementsLayout.setClassName("attribute-sublayout");
+        requirementsLayout.setJustifyContentMode(JustifyContentMode.START);
+        requirementsLayout.setAlignItems(Alignment.START);
+
+        requirementsLabel = new Label("Requirements:");
+        requirementsLabel.setClassName("attrubite-label");
+        requirementsLayout.add(requirementsLabel);
+
         attributeLayout = new VerticalLayout();
         attributeLayout.setClassName("attribute-layout");
         attributeLayout.setJustifyContentMode(JustifyContentMode.START);
+        attributeLayout.setPadding(false);
         attributeLayout.setAlignItems(Alignment.START);
 
         attributeSubLayout = new VerticalLayout();
@@ -144,7 +169,10 @@ public class CoursePanel extends VerticalLayout {
         scroller = new Scroller(attributeSubLayout);
         scroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
         scroller.addClassName("scroller");
-        attributeLayout.add(scroller);
+
+        requirementsScroller = new Scroller(requirementsLayout);
+        requirementsScroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
+        requirementsScroller.addClassName("scroller");
 
         if (userAuthentication != null && userAuthentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MODERATOR"))) {
             attributeManagementLabel = new Label("Manage attributes");
@@ -191,10 +219,41 @@ public class CoursePanel extends VerticalLayout {
             subMenu.addItem("Delete attribute", attrDeleteListener);
             subMenu.addItem("Create optional attribute", optionalAttrCreateListener);
             subMenu.addItem("Change optional attribute", optionalAttrChangeListener);
-            attributeLayout.add(attributeManagementMenu);
 
         }
-        courseDataLayout = new HorizontalLayout(courseDescrLayout, attributeLayout);
+
+        if (mappedObj.get(AttrEnum.REQUIREMENTS.getValue()) != null && !mappedObj.get(AttrEnum.REQUIREMENTS.getValue()).equals("")) {
+            subLayout.add(requirementsScroller);
+
+            List<String> requirementList = Arrays.asList(mappedObj.get(AttrEnum.REQUIREMENTS.getValue()).split(";"));
+            if (requirementList.contains("")) {
+                requirementList.remove("");
+            }
+            for (String requirement: requirementList) {
+                String hypertextColor = "green";
+                Obj requiredCourse = controllerInterface.getObjectById(Integer.parseInt(requirement)).getBody();
+                Map<Integer, String> mappedRequiredCourse = ObjectConverter.convertObject(requiredCourse);
+                Span requirementLink = new Span(mappedRequiredCourse.get(AttrEnum.COURSE_NAME.getValue()));
+                List<String> passedCourses = Arrays.asList(mappedUser.get(AttrEnum.COURSES_FINISHED.getValue()).split(";"));
+                if (!passedCourses.contains(requirement)) {
+                    hypertextColor = "red";
+                    requirementsMet = false;
+                }
+                requirementLink.getElement().setProperty("innerHTML", "<a href=\"vaadin_project/course?id=" +
+                        requirement +"\" style=\"color: "+ hypertextColor +"\">" +
+                        mappedRequiredCourse.get(AttrEnum.COURSE_NAME.getValue())+"</a>");
+
+                requirementsLayout.add(requirementLink);
+            }
+        }
+        attributeLayout.add(scroller);
+
+        if (userAuthentication != null && userAuthentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MODERATOR"))) {
+            attributeLayout.add(attributeManagementMenu);
+        }
+        subLayout.add(attributeLayout);
+
+        courseDataLayout = new HorizontalLayout(courseDescrLayout, subLayout);
         courseDataLayout.setClassName("course-data-layout");
         courseDataLayout.setJustifyContentMode(JustifyContentMode.EVENLY);
         courseDataLayout.setAlignItems(Alignment.STRETCH);
@@ -214,6 +273,10 @@ public class CoursePanel extends VerticalLayout {
         cancelCourseButton.addClickListener(click -> {
             cancelUserCourse(controllerInterface, mappedObj, mappedUser);
         });
+
+        if (!requirementsMet) {
+            joinCourseButton.setEnabled(false);
+        }
 
         if (Integer.parseInt(mappedObj.get(AttrEnum.CURRENT_PARTICIPANTS.getValue()))
                 >= Integer.parseInt(mappedObj.get(AttrEnum.PARTICIPANTS_REQUIRED.getValue()))) {

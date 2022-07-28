@@ -1,6 +1,7 @@
 package com.project.views;
 
 import com.project.controller.AdminControllerInterface;
+import com.project.controller.ModeratorControllerInterface;
 import com.project.controller.UserControllerInterface;
 import com.project.entity.Obj;
 import com.project.entity.ObjectTypeEnum;
@@ -32,11 +33,14 @@ public class CategoryView extends VerticalLayout implements HasUrlParameter<Stri
     private CategoryPanel categoryPanel;
     private HorizontalLayout horizontalLayout;
     private UserControllerInterface controllerInterface;
+    private ModeratorControllerInterface moderatorControllerInterface;
     private AdminControllerInterface adminControllerInterface;
     private FlexLayout footerLayout;
     public static final int PAGE_SIZE = 8;
 
-    public CategoryView(UserControllerInterface controllerInterface, AdminControllerInterface adminControllerInterface) {
+    public CategoryView(UserControllerInterface controllerInterface,
+                        ModeratorControllerInterface moderatorControllerInterface,
+                        AdminControllerInterface adminControllerInterface) {
 
         this.controllerInterface = controllerInterface;
         this.adminControllerInterface = adminControllerInterface;
@@ -166,7 +170,7 @@ public class CategoryView extends VerticalLayout implements HasUrlParameter<Stri
         navPanel = new NavPanel(controllerInterface, adminControllerInterface);
         Authentication userAuthentication = SecurityContextHolder.getContext().getAuthentication();
         if (userAuthentication != null && userAuthentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
-            navPanel.addCategoryDeletionButton(controllerInterface, adminControllerInterface);
+            navPanel.addCategoryDeletionButton(controllerInterface, moderatorControllerInterface, adminControllerInterface);
         }
         categoryPanel = new CategoryPanel(controllerInterface, mappedRootObj, mappedSubcategories,
                 mappedCourses, queryParamList, currentPage, pagesCount, event);

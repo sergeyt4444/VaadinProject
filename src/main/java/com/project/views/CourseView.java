@@ -20,7 +20,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-@Route("vaadin_project/course")
+@Route("vaadin_project/course/")
 @Secured("ROLE_USER")
 public class CourseView extends VerticalLayout implements BeforeEnterObserver {
 
@@ -79,9 +79,11 @@ public class CourseView extends VerticalLayout implements BeforeEnterObserver {
             Authentication userAuthentication = SecurityContextHolder.getContext().getAuthentication();
             if (userAuthentication != null && userAuthentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MODERATOR"))) {
                 navPanel.addAttributeManagementButton(controllerInterface, adminControllerInterface);
+                navPanel.addSubscriberManagementButton(controllerInterface, moderatorControllerInterface);
+                navPanel.addRestartCourseButton(controllerInterface, moderatorControllerInterface);
             }
             if (userAuthentication != null && userAuthentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
-                navPanel.addCourseDeletionButton(controllerInterface, adminControllerInterface);
+                navPanel.addCourseDeletionButton(controllerInterface, moderatorControllerInterface, adminControllerInterface);
             }
             horizontalLayout = new HorizontalLayout(navPanel, coursePanel);
             horizontalLayout.setHeight("100%");

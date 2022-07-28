@@ -1,11 +1,15 @@
 package com.project.controller;
 
 import com.project.entity.*;
+import com.project.tools.ObjectConverter;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.ws.http.HTTPException;
 import java.util.*;
 
 @FeignClient(name = "spring-backend", contextId = "1",decode404 = true)
@@ -60,6 +64,10 @@ public interface UserControllerInterface {
     @PutMapping("user/usercourses")
     public ResponseEntity addUserCourse(@RequestBody Map<String, String> mappedObjAttr);
 
+    @PutMapping("user/usercourses_bulk")
+    public ResponseEntity addUserCourseBulk(@RequestBody List<Map<String, String>> mappedObjAttrList);
+
+
     @GetMapping("user/usercourses/{name}")
     public ResponseEntity<List<Obj>> getUserCourses(@PathVariable (value = "name") String username,
                                                     @RequestParam(defaultValue = "1") Integer page,
@@ -67,6 +75,21 @@ public interface UserControllerInterface {
 
     @GetMapping("user/usercourses/{name}/count")
     public ResponseEntity<Integer> getUserCoursesCount(@PathVariable (value = "name") String username);
+
+    @GetMapping("user/passed_usercourses/{name}/count")
+    public ResponseEntity<Integer> getPassedUserCoursesCount(@PathVariable (value = "name") String username);
+
+    @GetMapping("user/passed_usercourses/{name}")
+    public ResponseEntity<List<Obj>> getPassedUserCourses(@PathVariable (value = "name") String username,
+                                                          @RequestParam(defaultValue = "1") Integer page,
+                                                          @RequestParam(defaultValue = "10") Integer pageSize);
+    @GetMapping("user/failed_usercourses/{name}")
+    public ResponseEntity<List<Obj>> getFailedUserCourses(@PathVariable (value = "name") String username,
+                                                          @RequestParam(defaultValue = "1") Integer page,
+                                                          @RequestParam(defaultValue = "10") Integer pageSize);
+
+    @GetMapping("user/failed_usercourses/{name}/count")
+    public ResponseEntity<Integer> getFailedUserCoursesCount(@PathVariable (value = "name") String username);
 
     @GetMapping("user/latest_courses")
     public ResponseEntity<List<Obj>> getLatestCourses(
@@ -93,4 +116,6 @@ public interface UserControllerInterface {
     @PostMapping("/user/mail")
     public ResponseEntity sendMailNotifications(@RequestBody Integer courseId);
 
+    @GetMapping("/user/all_courses")
+    public  ResponseEntity<List<Obj>> getAllCourses();
 }

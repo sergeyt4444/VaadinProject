@@ -2,6 +2,7 @@ package com.project.controller;
 
 import com.project.entity.Attribute;
 import com.project.entity.Obj;
+import com.project.entity.ObjectTypeEnum;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,4 +35,13 @@ public interface AdminControllerInterface {
     @DeleteMapping("admin/courses/{id}")
     public ResponseEntity<Map<String, Boolean>> deleteObj(@PathVariable (value = "id")Integer id);
 
+    @GetMapping("/admin/users")
+    public ResponseEntity<List<Obj>> getUsers(@RequestParam(defaultValue = "1") Integer page,
+                                              @RequestParam(defaultValue = "10") Integer pageSize);
+
+    @GetMapping("/admin/users/count")
+    public int getUsersCount();
+
 }
+
+

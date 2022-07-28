@@ -18,8 +18,12 @@ public class MiscTool {
 
     public static String removeNumFromStringList(String stringList, int forRemoval) {
         List<String> list = new ArrayList<>();
-        list.addAll(Arrays.asList(stringList.split(";")));
-        list.remove(Integer.toString(forRemoval));
+        if (stringList != null) {
+            list.addAll(Arrays.asList(stringList.split(";")));
+        }
+        if (list.contains(Integer.toString(forRemoval))) {
+            list.remove(Integer.toString(forRemoval));
+        }
         StringBuilder result = new StringBuilder();
         for (String elem: list) {
             result.append(elem).append(";");

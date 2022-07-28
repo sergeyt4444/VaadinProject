@@ -22,6 +22,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.server.StreamResource;
 import org.keycloak.KeycloakPrincipal;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -96,6 +97,8 @@ public class HeaderPanel extends HorizontalLayout {
                 newUser.put(AttrEnum.USER_NAME.getValue(), username);
                 newUser.put(AttrEnum.USER_COURSES.getValue(), "");
                 newUser.put(AttrEnum.COURSES_NOTIFIED.getValue(), "");
+                newUser.put(AttrEnum.COURSES_FAILED.getValue(), "");
+                newUser.put(AttrEnum.COURSES_FINISHED.getValue(), "");
                 controllerInterface.registerUser(newUser);
             }
             UI.getCurrent().getSession().setAttribute("user", username);
@@ -115,12 +118,28 @@ public class HeaderPanel extends HorizontalLayout {
         };
 
         ComponentEventListener<ClickEvent<MenuItem>> profileListener = click -> {
-            getUI().get().getPage().setLocation("http://localhost:8081/vaadin_project/profile");
+            getUI().ifPresent(ui -> {
+                ui.navigate("vaadin_project/profile");
+            });
+        };
+
+        ComponentEventListener<ClickEvent<MenuItem>> failedCoursesListener = click -> {
+            getUI().ifPresent(ui -> {
+                ui.navigate("vaadin_project/failed_courses");
+            });
+        };
+
+        ComponentEventListener<ClickEvent<MenuItem>> finishedCoursesListener = click -> {
+            getUI().ifPresent(ui -> {
+                ui.navigate("vaadin_project/finished_courses");
+            });;
         };
 
         MenuItem menuItem = menuBar.addItem(userLabel);
         SubMenu subMenu = menuItem.getSubMenu();
         subMenu.addItem("Profile", profileListener);
+        subMenu.addItem("Failed courses", failedCoursesListener);
+        subMenu.addItem("Finished courses", finishedCoursesListener);
         subMenu.addItem("Logout", logoutListener);
 
         userPanelLayout = new HorizontalLayout(userAvatar, menuBar);
