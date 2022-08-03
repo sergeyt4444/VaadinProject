@@ -1,6 +1,7 @@
 package com.project.views;
 
 import com.project.controller.AdminControllerInterface;
+import com.project.controller.ModeratorControllerInterface;
 import com.project.controller.UserControllerInterface;
 import com.project.entity.Obj;
 import com.project.entity.ObjectTypeEnum;
@@ -16,6 +17,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.*;
 
@@ -30,11 +33,14 @@ public class CategoryView extends VerticalLayout implements HasUrlParameter<Stri
     private CategoryPanel categoryPanel;
     private HorizontalLayout horizontalLayout;
     private UserControllerInterface controllerInterface;
+    private ModeratorControllerInterface moderatorControllerInterface;
     private AdminControllerInterface adminControllerInterface;
     private FlexLayout footerLayout;
     public static final int PAGE_SIZE = 8;
 
-    public CategoryView(UserControllerInterface controllerInterface, AdminControllerInterface adminControllerInterface) {
+    public CategoryView(UserControllerInterface controllerInterface,
+                        ModeratorControllerInterface moderatorControllerInterface,
+                        AdminControllerInterface adminControllerInterface) {
 
         this.controllerInterface = controllerInterface;
         this.adminControllerInterface = adminControllerInterface;
@@ -94,21 +100,21 @@ public class CategoryView extends VerticalLayout implements HasUrlParameter<Stri
             difficulties = queryParamList.get("difficulty");
         }
         else {
-            difficulties = AttributeTool.getDifficulties();
+            difficulties = new ArrayList<>();
         }
 
         if (queryParamList.containsKey("language")) {
             languages = queryParamList.get("language");
         }
         else {
-            languages = AttributeTool.getLanguages();
+            languages = new ArrayList<>();
         }
 
         if (queryParamList.containsKey("format")) {
             formats = queryParamList.get("format");
         }
         else {
-            formats = AttributeTool.getFormats();
+            formats = new ArrayList<>();
         }
 
         if (!isFiltered(queryParamList)) {
@@ -162,6 +168,10 @@ public class CategoryView extends VerticalLayout implements HasUrlParameter<Stri
         UI.getCurrent().getSession().setAttribute("root category id", ObjectConverter.getIdFromMappedObj(mappedRootObj));
 
         navPanel = new NavPanel(controllerInterface, adminControllerInterface);
+        Authentication userAuthentication = SecurityContextHolder.getContext().getAuthentication();
+        if (userAuthentication != null && userAuthentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            navPanel.addCategoryDeletionButton(controllerInterface, moderatorControllerInterface, adminControllerInterface);
+        }
         categoryPanel = new CategoryPanel(controllerInterface, mappedRootObj, mappedSubcategories,
                 mappedCourses, queryParamList, currentPage, pagesCount, event);
 

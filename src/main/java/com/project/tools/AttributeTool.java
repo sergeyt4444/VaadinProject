@@ -15,9 +15,9 @@ public class AttributeTool {
 
     public static final List<String> REQ_ATTRIBUTES = Collections.unmodifiableList(
             Arrays.asList("", "course name", "course description", "parent id", "", "creator", "start date", "difficulty",
-                    "language", "format", "participants required", "current participants", "subscribers"));
+                    "language", "format", "participants required", "current participants", "subscribers", "requirements"));
 
-    public static final int PRIMARY_ATTRIBUTE_ID_SPACE = 12;
+    public static final int PRIMARY_ATTRIBUTE_ID_SPACE = 13;
 
     public static List<String> getDifficulties() {
         return DIFFICULTIES;

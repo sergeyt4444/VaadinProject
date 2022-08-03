@@ -3,28 +3,46 @@ package com.project.views.components;
 import com.project.controller.AdminControllerInterface;
 import com.project.controller.UserControllerInterface;
 import com.project.entity.AttrEnum;
+import com.project.tools.AttributeTool;
 import com.project.tools.ObjectConverter;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Hr;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.server.VaadinSession;
 import org.keycloak.KeycloakPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class CourseCreationPanel extends CourseManipulationPanel {
 
+    private Button addRequirement;
+    private VerticalLayout requirementsLayout;
     private Button submitCourse;
     private Button closeDialog;
 
     public CourseCreationPanel(UserControllerInterface controllerInterface,
                                AdminControllerInterface adminControllerInterface, Dialog dialog) {
         this.setClassName("course-creation-panel");
+
+        requirementsLayout = new VerticalLayout();
+
+        addRequirement = new Button("Add requirement");
+        addRequirement.addClassName("course-creation-button");
+        addRequirement.addClickListener(click -> {
+            requirementsLayout.add(new RequirementElement(controllerInterface, null));
+        });
 
         submitCourse = new Button("Create course");
         submitCourse.addClassName("course-creation-button");
@@ -43,6 +61,21 @@ public class CourseCreationPanel extends CourseManipulationPanel {
             KeycloakPrincipal principal = ((KeycloakPrincipal) authentication.getPrincipal());
             String username = principal.getKeycloakSecurityContext().getToken().getGivenName();
             courseAttrs.put(AttrEnum.CREATOR.getValue(), username);
+
+            StringBuilder requirements = new StringBuilder("");
+            List<Component> componentList = requirementsLayout.getChildren().collect(Collectors.toList());
+            Set<String> requirementsSet = new HashSet<>();
+            for (Component requirement: componentList) {
+                RequirementElement requirementElement = (RequirementElement) requirement;
+                if (requirementElement.getValue()!=null)
+                {
+                    requirementsSet.add(Integer.toString(requirementElement.getValue()));
+                }
+            }
+            for (String reqiurementString: requirementsSet) {
+                requirements.append(reqiurementString).append(";");
+            }
+            courseAttrs.put(AttrEnum.REQUIREMENTS.getValue(), requirements.toString());
 
             String rootCategoryId = VaadinSession.getCurrent().getAttribute("root category id").toString();
             if (rootCategoryId != null) {
@@ -72,9 +105,10 @@ public class CourseCreationPanel extends CourseManipulationPanel {
         closeDialog.addClickListener(click -> {
             dialog.close();
         });
-
+        this.setColspan(addRequirement, 6);
+        this.setColspan(requirementsLayout, 6);
         this.setColspan(submitCourse,3);
         this.setColspan(closeDialog,3);
-        add(submitCourse, closeDialog);
+        add(addRequirement, requirementsLayout, submitCourse, closeDialog);
     }
 }

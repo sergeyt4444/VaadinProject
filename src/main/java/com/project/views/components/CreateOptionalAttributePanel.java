@@ -33,41 +33,44 @@ public class CreateOptionalAttributePanel extends FormLayout {
         submitButton = new Button("Create attribute");
         submitButton.addClickListener(click -> {
             Obj obj = controllerInterface.getObjectById(ObjectConverter.getIdFromMappedObj(mappedObj)).getBody();
-            boolean contains = false;
-            boolean isOptional = true;
-            for (ObjAttr objAttr: obj.getObjAttrs()) {
-                if (objAttr.getAttribute().getAttrName().equals(attrNameField.getValue())) {
-                    contains = true;
-                    if (objAttr.getAttribute().getAttrId() <= AttributeTool.PRIMARY_ATTRIBUTE_ID_SPACE) {
-                        isOptional = false;
+            if (obj != null) {
+                boolean contains = false;
+                boolean isOptional = true;
+                for (ObjAttr objAttr: obj.getObjAttrs()) {
+                    if (objAttr.getAttribute().getAttrName().equals(attrNameField.getValue())) {
+                        contains = true;
+                        if (objAttr.getAttribute().getAttrId() <= AttributeTool.PRIMARY_ATTRIBUTE_ID_SPACE) {
+                            isOptional = false;
+                        }
                     }
                 }
-            }
-            if (isOptional && !contains) {
-                Map<String, String> mappedObjAttr = AttributeTool.convertObjAttr(attrNameField.getValue(),
-                        attrValueField.getValue(), ObjectConverter.getIdFromMappedObj(mappedObj));
-                moderatorControllerInterface.createObjAttr(mappedObjAttr);
-                UI.getCurrent().getPage().reload();
-                Notification notification = new Notification("Attribute has been added");
-                notification.setPosition(Notification.Position.TOP_END);
-                notification.open();
-            }
-            else {
-                if (isOptional) {
-                    Notification notification = new Notification("To alter optional attribute, " +
-                            "use button \"Change optional attribute\"");
-                    notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                if (isOptional && !contains) {
+                    Map<String, String> mappedObjAttr = AttributeTool.convertObjAttr(attrNameField.getValue(),
+                            attrValueField.getValue(), ObjectConverter.getIdFromMappedObj(mappedObj));
+                    moderatorControllerInterface.createObjAttr(mappedObjAttr);
+                    UI.getCurrent().getPage().reload();
+                    Notification notification = new Notification("Attribute has been added");
                     notification.setPosition(Notification.Position.TOP_END);
                     notification.open();
                 }
                 else {
-                    Notification notification = new Notification("To alter primary attribute, " +
-                            "use button \"Change primary attribute\"");
-                    notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
-                    notification.setPosition(Notification.Position.TOP_END);
-                    notification.open();
+                    if (isOptional) {
+                        Notification notification = new Notification("To alter optional attribute, " +
+                                "use button \"Change optional attribute\"");
+                        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                        notification.setPosition(Notification.Position.TOP_END);
+                        notification.open();
+                    }
+                    else {
+                        Notification notification = new Notification("To alter primary attribute, " +
+                                "use button \"Change primary attribute\"");
+                        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                        notification.setPosition(Notification.Position.TOP_END);
+                        notification.open();
+                    }
                 }
             }
+            UI.getCurrent().getPage().reload();
         });
 
         closeDialog = new Button("Exit");

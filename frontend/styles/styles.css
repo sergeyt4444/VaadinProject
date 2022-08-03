@@ -153,6 +153,12 @@
     margin-top: 20px;
 }
 
+.dialog-text-label {
+    align-self: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+
 .footer-layout {
     min-width: 100%;
     align-content: center;
@@ -240,8 +246,8 @@
 
 .scroller {
     min-width: 40%;
-    min-height: 225px;
-    max-height: 225px;
+    min-height: 240px;
+    max-height: 240px;
 }
 
 .attribute-sublayout {
@@ -290,6 +296,12 @@
     min-width: 1200px;
     margin-left: 8%;
     margin-right: 8%;
+}
+
+.users-panel {
+    min-width: 800px;
+    margin-left: 20%;
+    margin-right: 16%;
 }
 
 .latest-courses-grid {
@@ -365,5 +377,13 @@
 .categories-grid {
     height: 70%;
     width: 100%;
+}
+
+finished_course {
+    background-color: lawngreen;
+}
+
+failed_course {
+    background-color: orangered;
 }
 
